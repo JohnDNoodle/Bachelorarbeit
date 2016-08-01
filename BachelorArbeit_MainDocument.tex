@@ -1,0 +1,83 @@
+%%	Dokument-Wrapper nach der Vorlage von Herrn Plate.
+
+%% Standard-Vorspann
+\documentclass[a4paper,12pt,oneside]{report}
+\usepackage[english,ngerman]{babel}                   
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[fleqn]{amsmath}
+
+
+%% Auf Schriftart Palatino umschalten
+\usepackage{mathpazo}
+\usepackage[scaled=.95]{helvet}
+\usepackage{courier}
+
+%% fast immer benoetigte Pakete
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{latexsym}
+\usepackage{makeidx}
+\usepackage{textcomp}
+\usepackage{rotating}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+
+%% spezielles Zeug
+\usepackage[tablename=Tbl.]{caption}
+\usepackage{nomencl}
+\usepackage{tocloft}
+\usepackage{Abschlussarbeit}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage[onehalfspacing]{setspace}
+
+\graphicspath{{graphics/}}
+\geometry{left = 4cm, right = 2cm, top = 2cm, bottom = 2cm}
+
+\captionsetup[table]{labelfont=bf,textfont=it}
+\captionsetup[figure]{labelfont=bf,textfont=it}
+\captionsetup{format=hang,indention=0pt,justification=raggedright, singlelinecheck=false}
+\addto\captionsngerman{\renewcommand{\figurename}{Abb.}}
+
+\renewcommand{\nomname}{Abkürzungsverzeichnis}
+
+\setlength{\cftfignumwidth}{3em}
+
+%% Neue umgebung definieren für 2 Abstracts auf einer Seite
+\newenvironment{abstractDuo}{
+	\begin{center}%
+		\bfseries\abstractname
+	\end{center}}%
+
+%% Index erzeugen
+\makeindex
+
+%% jetzt geht's los
+\begin{document}
+	\raggedbottom
+	
+	%% Die Datei "Vorspann.tex"  bitte ausfüllen!
+	\include{BA_Vorspann}  
+	
+	%% Hier kommt der eigentlich Text der Arbeit
+	%% sinnvoll ist, für jedes Kapitel eine eigene 
+	%% Datei zu nehmen, verkürzt die Zeit beim LaTeX-Durchlauf
+	%% Erst am Schluss alle Dateien verwenden.
+	
+	%\include{kap1}  %% als Beispiel mit dabei
+	
+	
+	%% Beim Anhang gibt es eine Musterdatei, die 
+	%% ergänzt werden kann
+	%\include{Anhang}
+	
+	
+	%% Stichwortverzeichnis ausgeben.
+	%% falls nicht notwendig, die folgende Zeile loeschen
+	\printindex
+	
+\end{document}
