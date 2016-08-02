@@ -25,6 +25,7 @@
 \usepackage{caption}
 \usepackage{verbatim}
 \usepackage{fancyhdr}
+\usepackage[printonlyused]{acronym}
 
 %% spezielles Zeug
 \usepackage[tablename=Tbl.]{caption}
@@ -34,6 +35,8 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage[onehalfspacing]{setspace}
+\usepackage{bibgerm}
+%\usepackage[backend=bibtex,style=verbose-trad2]{biblatex}
 
 \graphicspath{{graphics/}}
 \geometry{left = 4cm, right = 2cm, top = 2cm, bottom = 2cm}
@@ -53,6 +56,8 @@
 		\bfseries\abstractname
 	\end{center}}%
 
+
+
 %% Index erzeugen
 \makeindex
 
@@ -68,7 +73,7 @@
 	%% Datei zu nehmen, verkürzt die Zeit beim LaTeX-Durchlauf
 	%% Erst am Schluss alle Dateien verwenden.
 	
-	%\include{BA_Kapitel1} 
+	\include{BA_Kapitel1} 
 	
 	
 	%% Beim Anhang gibt es eine Musterdatei, die 
@@ -79,5 +84,9 @@
 	%% Stichwortverzeichnis ausgeben.
 	%% falls nicht notwendig, die folgende Zeile loeschen
 	\printindex
+	\bibliography{Sources}
+	\bibliographystyle{gerplain}
+	%\printbibliography
+	
 	
 \end{document}
