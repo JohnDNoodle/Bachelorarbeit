@@ -27,6 +27,7 @@
 \usepackage{fancyhdr}
 \usepackage[printonlyused]{acronym}
 
+
 %% spezielles Zeug
 \usepackage[tablename=Tbl.]{caption}
 \usepackage{nomencl}
@@ -36,7 +37,6 @@
 \usepackage{graphicx}
 \usepackage[onehalfspacing]{setspace}
 \usepackage{bibgerm}
-%\usepackage[backend=bibtex,style=verbose-trad2]{biblatex}
 
 \graphicspath{{graphics/}}
 \geometry{left = 4cm, right = 2cm, top = 2cm, bottom = 2cm}
@@ -50,7 +50,7 @@
 
 \setlength{\cftfignumwidth}{3em}
 
-%% Neue umgebung definieren für 2 Abstracts auf einer Seite
+%% Neue umgebung definieren für 2 Abstracts auf einer Seite ohne \clearpage
 \newenvironment{abstractDuo}{
 	\begin{center}%
 		\bfseries\abstractname
@@ -74,6 +74,8 @@
 	%% Erst am Schluss alle Dateien verwenden.
 	
 	\include{BA_Kapitel1} 
+	
+	\include{BA_Kapitel2}
 	
 	
 	%% Beim Anhang gibt es eine Musterdatei, die 
