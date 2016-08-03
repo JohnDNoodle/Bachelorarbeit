@@ -26,6 +26,7 @@
 \usepackage{verbatim}
 \usepackage{fancyhdr}
 \usepackage[printonlyused]{acronym}
+\usepackage[hidelinks, linktoc=all]{hyperref}
 
 
 %% spezielles Zeug
@@ -56,6 +57,7 @@
 		\bfseries\abstractname
 	\end{center}}%
 
+%\makenomenclature
 
 
 %% Index erzeugen
@@ -77,19 +79,28 @@
 	
 	\include{BA_Kapitel2}
 	
+	\include{BA_Kapitel3}
+	
+	\include{BA_Kapitel4}
+	
+	\include{BA_Kapitel5}
+	
+	\include{BA_Kapitel6}
+	
 	
 	%% Beim Anhang gibt es eine Musterdatei, die 
 	%% ergänzt werden kann
 	%\include{Anhang}
-	
+	%\printnomenclature
 	
 	%% Stichwortverzeichnis ausgeben.
 	%% falls nicht notwendig, die folgende Zeile loeschen
 	%\printindex
-	\bibliographystyle{gerplain}
-	\bibliography{Sources}
+	\include{BA_Anhang}
 	
 	%\printbibliography
+	
+
 	
 	
 \end{document}
