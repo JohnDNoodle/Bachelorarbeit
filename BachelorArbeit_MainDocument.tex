@@ -26,6 +26,8 @@
 \usepackage{verbatim}
 \usepackage{fancyhdr}
 \usepackage[printonlyused]{acronym}
+\usepackage[hidelinks, linktoc=all]{hyperref}
+
 
 %% spezielles Zeug
 \usepackage[tablename=Tbl.]{caption}
@@ -36,7 +38,6 @@
 \usepackage{graphicx}
 \usepackage[onehalfspacing]{setspace}
 \usepackage{bibgerm}
-%\usepackage[backend=bibtex,style=verbose-trad2]{biblatex}
 
 \graphicspath{{graphics/}}
 \geometry{left = 4cm, right = 2cm, top = 2cm, bottom = 2cm}
@@ -50,12 +51,13 @@
 
 \setlength{\cftfignumwidth}{3em}
 
-%% Neue umgebung definieren für 2 Abstracts auf einer Seite
+%% Neue umgebung definieren für 2 Abstracts auf einer Seite ohne \clearpage
 \newenvironment{abstractDuo}{
 	\begin{center}%
 		\bfseries\abstractname
 	\end{center}}%
 
+%\makenomenclature
 
 
 %% Index erzeugen
@@ -75,19 +77,30 @@
 	
 	\include{BA_Kapitel1} 
 	
+	\include{BA_Kapitel2}
+	
+	\include{BA_Kapitel3}
+	
+	\include{BA_Kapitel4}
+	
+	\include{BA_Kapitel5}
+	
+	\include{BA_Kapitel6}
+	
 	
 	%% Beim Anhang gibt es eine Musterdatei, die 
 	%% ergänzt werden kann
 	%\include{Anhang}
-	
+	%\printnomenclature
 	
 	%% Stichwortverzeichnis ausgeben.
 	%% falls nicht notwendig, die folgende Zeile loeschen
 	%\printindex
-	\bibliographystyle{gerplain}
-	\bibliography{Sources}
+	\include{BA_Anhang}
 	
 	%\printbibliography
+	
+
 	
 	
 \end{document}

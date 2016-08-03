@@ -1,3 +1,4 @@
+\pagenumbering{Roman}
 \begin{titlepage}
 	\begin{figure}[h]
 		 
@@ -71,11 +72,12 @@
 	\end{center}
 	
 \end{titlepage}
-
-\pagenumbering{Roman}
 \pagestyle{headings}
+\clearpage
+\phantomsection
 \addcontentsline{toc}{section}{Erklärung des Bearbeiters}
 \section*{Erklärung des Bearbeiters}
+
 
 
 \begin{enumerate}
@@ -107,7 +109,7 @@
 \clearpage
 
 %% Kurzfassung/Abstract
-\pagestyle{headings}
+\phantomsection
 \addcontentsline{toc}{section}{Zusammenfassung/Abstract}	
 \begin{abstractDuo}
 	Zusammenfassungstext hier einfügen
@@ -121,6 +123,8 @@
 \clearpage
 %% Inhaltsverzeichnis
 \pagestyle{plain}
+\clearpage
+\phantomsection
 \addcontentsline{toc}{section}{\contentsname}
 
 	\begin{spacing}{1.1}
@@ -131,10 +135,34 @@
 \addcontentsline{toc}{section}{Abkürzungsverzeichnis}	
 \section*{Abkürzungsverzeichnis}
 \begin{acronym}[Bash]
+	
+	\acro{CPS}{Cyber-physisches System}
 	\acro{CPPS}{Cyber-physisches Produktionssystem}
 	\acrodefplural{CPPS}{Cyber-physische Produktionssysteme}
-	\acro{CPS}{Cyber-physisches System}
+	\acro{CT}{Corporate Technologies}
+	\acro{FTF}{Fahrerloses Transportfahrzeug}
+	\acro{FTS}{Fahrerloses Transportsystem}
 	\acro{IoT}{Internet of Things}
+	\acro{PLC}{Programmable Logic Controller}
+	\acro{SPS}{Speicherprogrammierbare Steuerung}
+	\acro{TCP}{Transport Control Protocol}
+	\acro{UDP}{User Datagramm Protocol}
+
 \end{acronym}
+
+%%Nomenclature definitions
+
+
+%	\nomenclature{CPS}{Cyber-physisches System}
+%	\nomenclature{CPPS}{Cyber-physisches Produktionssystem}
+%	%\acrodefplural{CPPS}{Cyber-physische Produktionssysteme}
+%	\nomenclature{IoT}{Internet of Things}
+%	\nomenclature{PLC}{Programmable Logic Controller}
+%	\nomenclature{SPS}{Speicherprogrammierbare Steuerung}
+
+
+
+
 \clearpage
+\pagestyle{headings}
 \pagenumbering{arabic}
