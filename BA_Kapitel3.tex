@@ -1,10 +1,43 @@
 \chapter{Theoretische Grundlagen Wegfindung}
 
 \section{Modellierung der Anlagentopologie}
-
+	\label{Graph_Anlage}
+	Zur Berechnung eines Weges innerhalb der Anlage wird zuallererst die Topologie der besagten Anlage benötigt. Für die Funktionsweise der \ac{FTF} wurde definiert, das sich alle Fahrzeuge mittels optischer Merkmale auf einer definierten Teilstrecke bewegen. Zudem soll es den Fahrzeugen nur an festgelegten Entscheidungspunkten möglich sein, ihren Fahrzustand zu ändern und eine andere Teilstrecke. Dies bedeutet, das alle Fahrzeuge, sobald sie sich für eine Teilstrecke entschieden haben, dieser bis zum nächsten Entscheidungspunkt folgen. Auf Basis einer solchen logischen Unterteilung der Anlage in Entscheidungspunkte und Teilstrecken als Verbindungen zwischen zwei solcher Punkte, liegt es nahe als Datenstruktur für die Modellierung der Anlagentopologie einen Graphen zu verwenden. Die Entscheidungspunkte entsprechen hierbei den Knoten und die korrespondierenden Teilwegstrecken stellen die Kanten des Graphen dar. Da sich die \ac{FTF} möglichst frei durch die Produktion bewegen sollen, wird als Grundform der Anlage ein ungerichteter Graph zur Abbildung der Topologie verwendet, jedoch soll es für die spätere Wegberechnung unerheblich sein, ob es sich um einen gerichteten oder ungerichteten Graphen handelt.\\
+	\textbf{insert graphic about graphs here}\\
+	Da der Graph die Abbildung einer realen Anlage kann zudem ausgeschlossen werden das die Gewichtung der Kanten negativ ist, da dies je nach Art der Gewichtung nur wenig Nutzen bringen würde. Es existieren beispielsweise keine negativen Streckenabstände oder Fahrzeiten, die eine spezielle Betrachtung erforderlich machen und somit die Wahl der Wegfindungsalgorithmen einschränken würden.
 \section{Dijkstra-Algorithmus}
-
+	Der erste von insgesamt zwei für die Wegfindung verwendeten Algorithmen ist der nach seinem Erfinder benannte Dijkstra-Algorithmus, der den kürzesten Pfad zwischen einem Startknoten und einem Endknoten (oder allen anderen Knoten) eines Graphen ermittelt. Er kann verwendet werden für beliebige positiv gewichtete, gerichtete oder ungerichtete Graphen. Da in \ref{Graph_Anlage} negative Kantengewichtungen ausgeschlossen wurden, lässt sich der Algorithmus ohne Abwandlung auf den Graphen der Anlagentopologie anwenden. \\
+	Das Grundprinzip des Dijkstra-Algorithmus ist Unterteilung aller Graphenknoten in drei Untergruppen\cite{DijkstraAlg}:
+	
+	\begin{tabular}{p{2.5cm} p{10cm}}	
+		\textbf{Gruppe A:} & Die Menge aller Knoten, zu dem bereits ein kürzester Pfad bekannt ist.\\[0.25cm]
+		\textbf{Gruppe B:} & Die Menge aller Knoten, die mit mindestens einem Knoten aus Gruppe A verbunden sind, jedoch selbst nicht zu A gehören.\\[0.25cm]
+		\textbf{Gruppe C:} & Die Menge der restlichen Knoten, die nicht in den Gruppen A oder B enthalten sind.\\[0.25cm]
+	\end{tabular}
+	
+	Zusätzlich zu den Knoten können auch die Kanten drei unterschiedlichen Teilgruppen zugeordnet werden\cite{DijkstraAlg}:
+	
+	\begin{tabular}{p{2.5cm} p{10cm}}
+		\textbf{Gruppe I:} & Die Menge aller Kanten, die in einem kürzesten Pfad zu einem der Knoten aus Gruppe A vorkommen.\\[0.25cm]
+		\textbf{Gruppe II:} & Die Menge aller Kanten, aus denen die nächste Kante für Gruppe I ausgewählt wird, wenn der korrespondierende Knoten aus B zur Gruppe A hinzugefügt wird. Es existiert immer genau eine Kante für jeden Knoten aus Gruppe B. \\[0.25cm]
+		\textbf{Gruppe III:} & Die restlichen Kanten.\\[0.25cm]
+	\end{tabular}
+	
+	Der Algorithmus funktioniert nun wie folgt. Zu Beginn befinden sich alle Knoten und Kanten respektive in den Gruppen C oder III. Als erstes wird nun der Startknoten S zu A hinzugefügt, da ein kürzester Pfad vom Startknoten zu sich selbst mit dem Wert 0 bekannt ist. Ab nun werden folgende Schritte solange wiederholt, bis das Ziel erreicht wurde:
+	\begin{enumerate}
+		\item Man betrachte alle Kanten \textit{z} die den soeben zu A hinzugefügten Knoten mit einem Knoten \textit{K} aus B oder C verbinden. 
+		\begin{itemize}
+			\item Gehört \textit{K} zur Gruppe B, so wird untersucht ob \textit{z} zu einem kürzeren Pfad zu \textit{K} führt als der bisherige kürzeste Pfad mit einer Kante aus II zu diesem Knoten. Ist dies der Fall, so ersetzt \textit{z} die korrespondierende Kante aus II. Die Kante die durch \textit{z} wird wieder zur Gruppe III hinzugefügt.
+			\item Gehört \textit{K} zur Gruppe  C, so wird \textit{K} zu B und \textit{z} zu II hinzugefügt.
+		\end{itemize}
+		\item Es existiert immer nur jeweils ein Weg vom Startknoten zu einem beliebigen Knoten von B unter Verwendung der Kanten aus I und II. Nun wird derjenige Knoten aus B zur Gruppe A hinzugefügt, dessen Weg der kürzeste ist. Analog wird die zugehörige Kante der Gruppe I zugeordnet.
+	\end{enumerate}
+	
+	Die \textbf{insert graphic here} zeigt die Funktionsweise des Algorithmus an einem einfachen Beispielgraphen mit vier Knoten.
+	
+	
 \section{A*-Algorithmus}
+\cite{Hart1968}
 
 \section{Vergleich verschiedener Heuristiken}
 
