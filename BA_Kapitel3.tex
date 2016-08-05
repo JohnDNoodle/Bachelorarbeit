@@ -6,6 +6,7 @@
 	\textbf{insert graphic about graphs here}\\
 	Da der Graph die Abbildung einer realen Anlage kann zudem ausgeschlossen werden das die Gewichtung der Kanten negativ ist, da dies je nach Art der Gewichtung nur wenig Nutzen bringen würde. Es existieren beispielsweise keine negativen Streckenabstände oder Fahrzeiten, die eine spezielle Betrachtung erforderlich machen und somit die Wahl der Wegfindungsalgorithmen einschränken würden.
 \section{Dijkstra-Algorithmus}
+	\label{Dijkstra_Alg}
 	Der erste von insgesamt zwei für die Wegfindung verwendeten Algorithmen ist der nach seinem Erfinder benannte Dijkstra-Algorithmus, der den kürzesten Pfad zwischen einem Startknoten und einem Endknoten (oder allen anderen Knoten) eines Graphen ermittelt. Er kann verwendet werden für beliebige positiv gewichtete, gerichtete oder ungerichtete Graphen. Da in \ref{Graph_Anlage} negative Kantengewichtungen ausgeschlossen wurden, lässt sich der Algorithmus ohne Abwandlung auf den Graphen der Anlagentopologie anwenden. \\
 	Das Grundprinzip des Dijkstra-Algorithmus ist Unterteilung aller Graphenknoten in drei Untergruppen\cite{DijkstraAlg}:
 	
@@ -35,9 +36,11 @@
 	
 	Die \textbf{insert graphic here} zeigt die Funktionsweise des Algorithmus an einem einfachen Beispielgraphen mit vier Knoten.
 	
+	Der Berechnungsaufwand des Dijkstra-Algorithmus beträgt in Landau-Notation vereinfacht $\mathcal{O}(\lvert \mathcal{V}\rvert ^2)$ beziehungsweise $\mathcal{O}(\lvert \mathcal{V}\rvert  \log \lvert \mathcal{V}\rvert + \lvert \mathcal{E}\rvert) $ bei der Implementierung mittels Fibonacci-Heaps\cite{Fredman1984} wobei  $\mathcal{V} $ gleich der Anzahl der Knoten  und $\mathcal{E}$ gleich der Anzahl der Kanten des Graphen ist. diese Vereinfachung gilt jedoch nur, wenn die Anzahl der Kanten in der gleichen Größenordnung liegt wie die Anzahl der Knoten.
 	
 \section{A*-Algorithmus}
-\cite{Hart1968}
+	Der zweite verwendete Algorithmus für die Wegfindung ist der sogenannte A*-Algorithmus. Dieser ist eine Weiterentwicklung des in \ref{Dijkstra_Alg}\ref vorgestellten Dijkstra-Algorithmus. Der grundlegende Unterschied ist jedoch, das bei A* eine Bewertung der Betrachtungsreihenfolge von Knoten bei der Berechnung verwendet werden. Dies bedeutet, dass diejenigen Knoten und Kanten zuerst expandiert werden sollen, bei denen die Wahrscheinlichkeit höher ist, das sie Teil des kürzesten Pfades zum Zielknoten sind. Im Vergleich dazu wurde beim Dijkstra-Algorithmus immer genau der Knoten als nächstes expandiert, der den kürzesten Abstand zu den bereits expandierten Knoten hatte\textbf{Insert graphic dijkstra vs A*}. Um eine Abschätzung der Wahrscheinlichkeit eines Knotens bezüglich seiner Zugehörigkeit zu dem  kürzesten Pfad vom Start zum Zielknoten treffen zu können, werden somit zusätzliche Informationen über die Beziehung zwischen einzelnen Knoten und dem Zielknoten benötigt. Diese Bewertung von Knoten wird auch als Heuristik bezeichnet.
+	\cite{Hart1968}
 \subsection{Alternative D* / D*-Lite}
 \cite{DStarAlg}
 \cite{Koenig2005}
