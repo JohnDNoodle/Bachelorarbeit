@@ -6,7 +6,7 @@
 	\textbf{insert graphic about graphs here}\\
 	Da der Graph die Abbildung einer realen Anlage kann zudem ausgeschlossen werden das die Gewichtung der Kanten negativ ist, da dies je nach Art der Gewichtung nur wenig Nutzen bringen würde. Es existieren beispielsweise keine negativen Streckenabstände oder Fahrzeiten, die eine spezielle Betrachtung erforderlich machen und somit die Wahl der Wegfindungsalgorithmen einschränken würden.
 \section{Dijkstra-Algorithmus}
-	Der erste von insgesamt zwei für die Wegfindung verwendeten Algorithmen ist der nach seinem Erfinder benannte Dijkstra-Algorithmus, der den kürzesten Pfad zwischen einem Startknoten und einem Endknoten (oder allen anderen Knoten) eines Graphen ermittelt. Er kann verwendet werden für beliebige positiv gewichtete, gerichtete oder ungerichtete Graphen. Da in \ref{Graph_Anlage} negative Kantengewichtungen ausgeschlossen wurden, lässt sich der Algorithmus ohne Abwandlung auf den Graphen der Anlagentopologie anwenden.
+	Der erste von insgesamt zwei für die Wegfindung verwendeten Algorithmen ist der nach seinem Erfinder benannte Dijkstra-Algorithmus, der den kürzesten Pfad zwischen einem Startknoten und einem Endknoten\footnote{oder allen anderen Knoten.} eines Graphen ermittelt. Er kann verwendet werden für beliebige positiv gewichtete, gerichtete oder ungerichtete Graphen. Da in \ref{Graph_Anlage} negative Kantengewichtungen ausgeschlossen wurden, lässt sich der Algorithmus ohne Abwandlung auf den Graphen der Anlagentopologie anwenden.
 	\subsection{Grundprinzip}
 		\label{Dijkstra_Alg}
 		Das Grundprinzip des Dijkstra-Algorithmus ist Unterteilung aller Graphenknoten in drei Untergruppen\cite{DijkstraAlg}:
@@ -48,12 +48,13 @@
 \section{A*-Algorithmus}
 	Der zweite verwendete Algorithmus für die Wegfindung ist der sogenannte A*-Algorithmus. Dieser ist eine Weiterentwicklung des in \ref{Dijkstra_Alg} vorgestellten Dijkstra-Algorithmus. Der grundlegende Unterschied ist jedoch, das bei A* eine Bewertung der Betrachtungsreihenfolge von Knoten bei der Berechnung verwendet werden. Dies bedeutet, dass diejenigen Knoten und Kanten zuerst expandiert werden sollen, bei denen die Wahrscheinlichkeit höher ist, das sie Teil des kürzesten Pfades zum Zielknoten sind. Im Vergleich dazu wurde beim Dijkstra-Algorithmus immer genau der Knoten als nächstes expandiert, der den kürzesten Abstand zu den bereits expandierten Knoten hatte\textbf{Insert graphic dijkstra vs A*}. Um eine Abschätzung der Wahrscheinlichkeit eines Knotens bezüglich seiner Zugehörigkeit zu dem  kürzesten Pfad vom Start zum Zielknoten treffen zu können, werden somit zusätzliche Informationen über die Beziehung zwischen einzelnen Knoten und dem Zielknoten benötigt. Diese Bewertung von Knoten wird auch als Heuristik bezeichnet. Mittels dieser Bewertung kann nun bereits vor Erreichen des Zielknotens eine Aussage über die Länge der Route gemacht werden.
 	\subsection{Grundprinzip}
+		\label{A*-Alg}
 		Die Funktionsweise des A*-Algorithmus kann somit wie folgt als Erweiterung des Dijkstra-Algorithmus beschrieben werden\cite{Hart1968}:
 		\begin{center}
 			\begin{minipage}{0.8\linewidth}
 				\begin{itemize}
 					\item \textit{Seien $s$, $n$ und $z$ beliebige Knoten des Graphen $G$, wobei $s$ der Startknoten und $z$ der Zielknoten für die Ermittlung des kürzesten Weges von $s$ zu $z$ sind.}\\
-					\item \textit{Sei $f(n)$ eine Funktion zur Abschätzung der Pfadlänge vom Knoten $n$ zum Knoten $z$.}
+					\item \textit{Sei $f(n)$ eine Funktion zur Abschätzung der Pfadlänge vom Knoten $s$ zum Knoten $z$, welcher den Knoten $n$ beinhält.}
 				\end{itemize}
 		
 				\begin{enumerate}
@@ -71,8 +72,37 @@
 	
 	
 	\subsection{Abschätzungsfunktion $f(n)$}
+		Die Abschätzungsfunktion, die in \ref{A*-Alg} definiert wurde, kann unterteilt werden in zwei Unterfunktionen\cite{Hart1968}:
+		\begin{equation}
+			f(n)=g(n)+h(n)
+		\end{equation}
+		
+		$g(n)$ beschreibt hierbei den Wert des kürzesten Pfads von $s$ zu $n$ und $h(n)$ beschreibt den Wert des Pfades von $n$ zum Ziel $z$.
+		
+		Da die genauen Werte für $g(n)$ und $f(n)$ im Verlauf der Berechnung aber möglicherweise noch nicht exakt bestimmbar sind \footnote{exakt bestimmbar sind diese erst wirklich beim erreichen des Zielknotens $z$ und sukzessivem Beenden des Algorithmus.}, werden Schätzwerte für $g(n)$ und $h(n)$ verwendet. Sei somit $\hat{g}(n)$ der Wert des bisher gefundenen kürzesten Pfads von $s$ zu $n$ und sei $\hat{h}(n)$ der Wert der Heuristik des Pfads von $n$ zum Ziel $z$ so folgt als Abschätzung für $f(n)$
+		\begin{equation}
+			\hat{f}(n)=\hat{g}(n)+\hat{h}(n)
+		\end{equation}
+		
+		Man kann nun beweisen das für alle Knoten $n$, die als offen markiert sind gilt:
+		\begin{equation}
+			\hat{g}(n)=g(n)
+		\end{equation}
+		Da davon ausgegangen werden kann, das alle Pfade $g(k_i)$ für bereits geschlossene Knoten $k$ bekannt und minimal sind und somit auch gilt\footnote{analog zu \ref{Dijkstra_Alg} Schritt 2 mit $v_{k,n}$ als die Gewichtung der Kante zwischen den Knoten $k$ und $n$.}
+		\begin{equation}
+			\hat{g}(n)=g(k_i)+min(v_{k_i,n})=g(n)
+		\end{equation}
+		 muss nur noch die Heuristik $\hat{h}(n)$ definiert werden.
+		 Es kann bewiesen werden, das der A*-Algorithmus konsistent ist, das heißt, dass jeder bereits geschlossene Knoten nicht erneut geöffnet werden muss, wenn gilt:
+		 \begin{equation}
+			 \hat{h}(n)\le h(n).
+		 \end{equation}
+		 Für die Berechnung bedeutet dies, dass wir den Wert des Restpfades von $n$ zu dem Zielknoten $z$ durch die Heuristik zwar unterschätzen dürfen, falls wir aber für die Berechnung einen möglichst effizienten Algorithmus benötigen, wir die Heuristik auf keinen Fall überschätzen dürfen.
+		
+		
+		
 	
-	\subsection{Vergleich verschiedener Heuristiken}
+	\subsection{Vergleich verschiedener Heuristiken $h(n)$}
 		\cite{Patel2016}
 	
 	\subsection{Darstellung der Funktionsweise}
