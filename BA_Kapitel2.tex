@@ -22,12 +22,14 @@
 
 \section{Erwartete Ziele für die Wegfindung}
 	Da bei der Planung des Arbeitsauftrags noch nicht absehbar war, wie zeitaufwendig die Realisierung der Aufgabe sein würde, wurde die Funktionalität der Wegfindungskomponente der Anlage in mehrere Stufen unterteilt:
-	\begin{enumerate}
-		\item[\textbf{Grundstufe:}] Es können detaillierte Teilrouten generiert werden auf der Basis von Anfangs- und Endpunkten.
-		\item[\textbf{Stufe 1:}] Es können komplette Routen bestehend aus Teilrouten anhand eines einzigen Fertigungsplans generiert werden, es existiert pro Funktionalität nur eine Bearbeitungsstation. Mehrere \ac{FTF} erhalten die gleiche Route und reihen sich hintereinander ein.
-		\item[\textbf{Stufe 2:}] Es wird werden komplette Routen anhand eines einzigen Fertigungsplans generiert, pro Funktionalität existieren mehrere Bearbeitungsstationen. Die \ac{FTF} können unterschiedliche Wege nehmen und sich gegenseitig überholen.
-		\item[\textbf{Stufe 3:}] Analog zu Stufe 2, es können jedoch im laufenden Betrieb Störungen in der Form von persistenten Blockaden auftreten, die bei der Wegfindung berücksichtigt werden.
-		\item[\textbf{Stufe 4:}] Analog zu Stufe 3, verschiedene Fahrzeuge können unterschiedliche Fertigungspläne und somit andere Routen verfolgen.
-	\end{enumerate}
+	
+	\begin{tabular}{p{2.5cm} p{10cm}}
+		\textbf{Grundstufe:} & Es können detaillierte Teilrouten generiert werden auf der Basis von Anfangs- und Endpunkten.\\[0.25cm]
+		\textbf{Stufe 1:} & Es können komplette Routen bestehend aus Teilrouten anhand eines einzigen Fertigungsplans generiert werden, es existiert pro Funktionalität nur eine Bearbeitungsstation. Mehrere \ac{FTF} erhalten die gleiche Route und reihen sich hintereinander ein.\\[0.25cm]
+		\textbf{Stufe 2:} & Es wird werden komplette Routen anhand eines einzigen Fertigungsplans generiert, pro Funktionalität existieren mehrere Bearbeitungsstationen. Die \ac{FTF} können unterschiedliche Wege nehmen und sich gegenseitig überholen.\\[0.25cm]
+		\textbf{Stufe 3:} & Analog zu Stufe 2, es können jedoch im laufenden Betrieb Störungen in der Form von persistenten Blockaden auftreten, die bei der Wegfindung berücksichtigt werden.\\[0.25cm]
+		\textbf{Stufe 4:} & Analog zu Stufe 3, verschiedene Fahrzeuge können unterschiedliche Fertigungspläne und somit andere Routen verfolgen.\\[0.25cm]
+	\end{tabular}
+	
 	Als zusätzliches Ziel wurde die Visualisierung der geplanten und bereits zurückgelegten Fahrstrecken der verschieden \ac{FTF} definiert, zur besseren Darstellung der einzelnen Aspekte der definierten Stufen. Die Anlage wird zudem in Kooperation mit der Siemens Entwicklungsabteilung \ac{CT} entwickelt wird, welche parallel die gleiche Anlage als Simulation testet und die ermittelten Ergebnisse mit dem Resultat der physikalischen Anlage vergleicht.
 	
