@@ -71,7 +71,8 @@
 	
 	
 	
-	\subsection{Abschätzungsfunktion $f(n)$}
+	\subsection{Abschätzungsfunktion f(n)}
+		\label{Abschaetz}
 		Die Abschätzungsfunktion, die in \ref{A*-Alg} definiert wurde, kann unterteilt werden in zwei Unterfunktionen\cite{Hart1968}:
 		\begin{equation}
 			f(n)=g(n)+h(n)
@@ -84,7 +85,7 @@
 			\hat{f}(n)=\hat{g}(n)+\hat{h}(n)
 		\end{equation}
 		
-		Man kann nun beweisen das für alle Knoten $n$, die als offen markiert sind gilt:
+		Man kann nun beweisen das für alle Knoten $n$, die als offen markiert sind, der kürzeste Pfad vom Startknoten aus bereits bekannt ist, und somit gilt:
 		\begin{equation}
 			\hat{g}(n)=g(n)
 		\end{equation}
@@ -102,20 +103,53 @@
 		
 		
 	
-	\subsection{Vergleich verschiedener Heuristiken $h(n)$}
-		\cite{Patel2016}
+	\subsection{Vergleich verschiedener Heuristiken h(n)}
+		\label{Heuristik}
+		Die in Kapitel \ref{Abschaetz} besprochene Abschätzungsfunktion $f(n)$ hat einen großen Einfluss auf das Verhalten des A*-Algorithmus.
+		Zur Veranschaulichung sollen einige Möglichkeiten für die Heuristiken betrachtet werden\cite{Patel2016}:
+		\begin{enumerate}
+			\item \textbf{$\hat{h}(n)=0$:} Wenn der Wert der Heuristik konstant auf Null gesetzt wird, so ist dies gleich zu setzen damit, als würden keine Zusatzinformationen zur Berechnung der Route verwendet. Dies bedeutet das immer genau der Knoten aus der Menge von offenen Punkten ausgewählt wird, dessen Abstand zu einem der geschlossenen Knoten am kleinsten ist. Der kürzeste gefundene Pfad durch einen Zwischenknoten $n$ hat zu jedem Zeitpunkt $i$ immer $f(n)=g_i(n)$. Somit entspricht der A*-Algorithmus ohne zusätzliche Informationen genau dem Dijkstra-Algorithmus aus \ref{Dijkstra_Alg}.
+			\item \textbf{$\hat{h}(n)<h(n)$:} Wenn der Abstand eines Knotens $n$ zum Ziel immer unterschätzt wird, also immer kleiner ist als der tatsächliche Abstand, so findet der A*-Algorithmus garantiert den kürzesten Pfad zwischen Start und Ziel. Je kleiner $\hat{h}(n)$ im Verhältnis zu $h(n)$ ist, desto mehr Punkte muss A* expandieren und umso langsamer läuft der Algorithmus.
+			\item \textbf{$\hat{h}(n)=h(n)$:} Wenn der geschätzte Abstand eines Knotens genau dem tatsächlichen Abstand entspricht, expandiert A* immer die minimale Anzahl von Knoten entlang des kürzesten Pfades. Das heißt, dass wenn der kürzeste Pfad sechs Knoten enthält, der A*-Algorithmus nur genau sechs Knoten expandiert bevor der Kürzeste Pfad gefunden wurde. Zudem ist der Wert von $f_k(n)$ für jeden Teilknoten $k$ auf dem kürzesten Pfad immer gleich dem exakten Wert des Abstands zwischen Start und Zielknoten.
+			\item \textbf{$\hat{h}(n)>h(n)$:} Wenn der geschätzte Abstand eines Knotens größer ist als der tatsächliche Abstand zum Zielknoten, so kann nicht garantiert werden, dass nicht kürzere Pfade zu bereits geschlossenen Knoten existieren.  Somit müssten bereits geschlossene Knoten erneut geöffnet werden um den tatsächlich kürzesten Pfad zu finden. Wird dies nicht getan, so kann der A*-Algorithmus zwar unter Umständen schneller einen Pfad vom Start zum Ziel finden, es ist aber nicht garantiert, dass es sich um den Kürzesten handelt.
+			\item \textbf{$\hat{h}(n)\gg h(n)$} Wenn der Schätzwert der Heuristik viel größer ist als der tatsächliche Abstand zum Zielknoten, so ist die Abschätzungsfunktion $f(n)$ nur noch abhängig von $\hat{h}(n)$ und die anderen Terme können vernachlässigt werden. Somit hängt die Reihenfolge der expandierten Knoten nur noch von den Werten der Heuristik der entsprechenden Knoten ab.
+		\end{enumerate}
+		 
+		Anhand der vorgestellten Eigenschaften der Heuristik wird erkennbar, das der A*-Algorithmus durch die Modifizierung der Heuristikberechnung an die gegebenen Anforderungen anpassbar ist. Anstatt einer genauen, aber langsamen Pfadberechnung, kann auf Kosten der Genauigkeit auch schnell ein möglicherweise nicht optimaler Weg zum Ziel gefunden werden. Zudem kann durch perfektes Wissen der Anlage in kürzester Zeit der kürzeste Weg ermittelt werden.
 	
 	\subsection{Darstellung der Funktionsweise}
-	
+		Anhand eines einfachen Beispiels soll jetzt die Funktionsweise des A*-Algorithmus dargestellt werden. Die Knoten des folgenden Graphen sollen Städte darstellen und die Kanten geben die Verbindungen durch Schnellstraßen oder Autobahnen wieder. Als Heuristik wurde hier die Entfernung in Luftlinie zwischen den jeweiligen Städten und der Zielstadt gewählt, da diese die Bedingung $\hat{h}(n)\le h(n)$ erfüllt:
+		\\ \textbf{insert graphic here} 
 
 	
 	\subsection{Berechnungsaufwand}
-	
+		Der Berechnungsaufwand für den A*-Algorithmus lässt sich nur schwer festlegen, da wie in \ref{Heuristik} beschrieben, die Berechnung des kürzesten Pfads sehr stark von der Heuristik abhängt. Unter der Annahme, dass auch wirklich der kürzeste Pfad gefunden wird, muss für die Heuristik gelten:
+		\begin{equation} \label{eq:Heuristikbedingung}
+			0\le \hat{h}(n)\le h(n)
+		\end{equation}
+		Somit muss auch der Berechnungsaufwand zwischen dem des Dijkstra-Algorithmus und dem Aufwand im Falle einer exakten Heuristik liegen. Da bei einer exakten Heuristik die Zahl der expandierten Knoten nur von der Anzahl der Knoten auf dem kürzesten Pfad abhängt, ist die Berechnungsaufwand konstant. Daraus folgt für eine beliebige Heuristik, die die Bedingung \ref{eq:Heuristikbedingung} erfüllt:
+		\begin{equation}
+			\mathcal{O}(\lvert \mathcal{V}\rvert ^2)\ge \mathcal{O}(\hat{h}(n))\ge \mathcal{O}(1)
+		\end{equation}
+		
+		Somit ist der Berechnungsaufwand in schlechtesten Fall quadratisch, im besten Fall aber konstant. Eine bessere Heuristik führt somit dazu, dass weniger Knoten als im schlechtesten Fall expandiert werden müssen und sich somit der Rechenaufwand verringert.
+		
+	\subsection{Nachteile und Alternativen zum A*-Algorithmus}
+		\label{A*Speicher}
+		Ein großer Nachteil des A*-Algorithmus ist der hohe Speicherverbrauch. Dieser kommt daher, das für die laufende Berechnung immer sowohl die Liste der geschlossenen als auch die der offenen Knoten im Speicher gehalten werden muss. Dies kann vor allem bei Graphen mit einer großen Anzahl von Kanten im Vergleich zur Anzahl der Knoten ein Problem sein. Zudem ist der A*-Algorithmus unflexibel was dynamische Veränderungen der Anlage sowie die partielle Neuberechnung von Teilrouten betrifft. Es existieren Weiterentwicklungen des A*-Algorithmus die sich unter anderem mit diesen Problemen befassen:
+		
+		\begin{tabular}{p{2.5cm} p{10cm}}
+			\textbf{\ac{MA*}\cite{Chakrabarti1989}:} &	Dieser Algorithmus beschränkt den Speicherverbrauch indem er den Topologiegraphen in Teilbäume unterteilt und nur erfolgversprechende Knoten und Teilgraphen im Speicher behält.\\[0.5cm]
+			\textbf{\ac{RTA*}\cite{Korf1990}:} & Dieser Algorithmus unterteilt den Hauptalgorithmus in  Planungs- und Ausführungsphasen und beschränkt die Anzahl der betrachteten Knoten anhand einer Alpha-Beta-Suche. Durch diese Unterteilung kann ein gewisses Maß an Dynamik gewonnen werden, da der Algorithmus nach jeder Ausführungsphase die Restroute neu evaluiert und gegebenenfalls die aktuelle Route gegen einen neuen optimierten Weg ersetzt.\\[0.5cm]
+			\textbf{\ac{D*}\cite{DStarAlg}\cite{Koenig2005}:} & Dieser Algorithmus wurde entwickelt für Topologien, welche nur teilweise bekannt sind, beziehungsweise die sich dynamisch verändern können. Zeiger die entlang des jeweils kürzesten Weges vom aktuellen Knoten zum Startknoten zeigen werden bei Anlagenänderung durch sogenannte "`Modify-Cost-Operationen"' ausgehend von der Anlagenänderung kaskadierend modifiziert bis sich ein neuer statischer Zustand eingestellt hat. Die Wegberechnung nutzt diese Zeiger zur schnelleren Berechnung des kürzesten Pfades.\\[0.5cm]
+			
+		\end{tabular}
+		
+		Für die Implementierung der Wegfindungsaufgabe die in \ref{Aufgabenstellung_Pathfinding} definiert ist, wurde eine Kombination aus dem Grundalgorithmus A* und der Planungs- und Ausführungsphase von \ac{RTA*} verwendet, bei der in regelmäßigen Abständen der bisher gefundene Teilweg verifiziert und bei Bedarf neu berechnet wird. Für Anlagen Höherer Komplexität wäre zudem aufgrund des begrenzt verfügbaren Speichers eine Implementation von \ac{MA*} sinnvoll. Der \ac{D*}-Algorithmus wurde wegen seiner höheren Komplexität und der Beschränkungen durch die Programmierumgebung nicht implementiert, ist aber eine effizientere Alternative zum A*-Algorithmus, die vor allem durch ihre Dynamik besticht.
+		
+				
 
-	
-\section{Alternative D* / D*-Lite}
-\cite{DStarAlg}
-\cite{Koenig2005}
+
 
 
 
