@@ -4,7 +4,7 @@
 	\label{Graph_Anlage}
 	Zur Berechnung eines Weges innerhalb der Anlage wird zuallererst die Topologie der besagten Anlage benötigt. Für die Funktionsweise der \ac{FTF} wurde definiert, das sich alle Fahrzeuge mittels optischer Merkmale auf einer definierten Teilstrecke bewegen. Zudem soll es den Fahrzeugen nur an festgelegten Entscheidungspunkten möglich sein, ihren Fahrzustand zu ändern und eine andere Teilstrecke. Dies bedeutet, das alle Fahrzeuge, sobald sie sich für eine Teilstrecke entschieden haben, dieser bis zum nächsten Entscheidungspunkt folgen. Auf Basis einer solchen logischen Unterteilung der Anlage in Entscheidungspunkte und Teilstrecken als Verbindungen zwischen zwei solcher Punkte, liegt es nahe als Datenstruktur für die Modellierung der Anlagentopologie einen Graphen zu verwenden. Die Entscheidungspunkte entsprechen hierbei den Knoten und die korrespondierenden Teilwegstrecken stellen die Kanten des Graphen dar. Da sich die \ac{FTF} möglichst frei durch die Produktion bewegen sollen, wird als Grundform der Anlage ein ungerichteter Graph zur Abbildung der Topologie verwendet, jedoch soll es für die spätere Wegberechnung unerheblich sein, ob es sich um einen gerichteten oder ungerichteten Graphen handelt.\\
 	\textbf{insert graphic about graphs here}\\
-	Da der Graph die Abbildung einer realen Anlage kann zudem ausgeschlossen werden das die Gewichtung der Kanten negativ ist, da dies je nach Art der Gewichtung nur wenig Nutzen bringen würde. Es existieren beispielsweise keine negativen Streckenabstände oder Fahrzeiten, die eine spezielle Betrachtung erforderlich machen und somit die Wahl der Wegfindungsalgorithmen einschränken würden.
+	Da der Graph die Abbildung einer realen Anlage ist, kann zudem ausgeschlossen werden, dass die Gewichtung der Kanten negativ ist, da dies je nach Art der Gewichtung nur wenig Nutzen bringen würde. Es existieren beispielsweise keine negativen Streckenabstände oder Fahrzeiten, die eine spezielle Betrachtung erforderlich machen und somit die Wahl der Wegfindungsalgorithmen einschränken würden.
 \section{Dijkstra-Algorithmus}
 	Der erste von insgesamt zwei für die Wegfindung verwendeten Algorithmen ist der nach seinem Erfinder benannte Dijkstra-Algorithmus, der den kürzesten Pfad zwischen einem Startknoten und einem Endknoten\footnote{oder allen anderen Knoten.} eines Graphen ermittelt. Er kann verwendet werden für beliebige positiv gewichtete, gerichtete oder ungerichtete Graphen. Da in \ref{Graph_Anlage} negative Kantengewichtungen ausgeschlossen wurden, lässt sich der Algorithmus ohne Abwandlung auf den Graphen der Anlagentopologie anwenden.
 	\subsection{Grundprinzip}
@@ -54,7 +54,7 @@
 			\begin{minipage}{0.8\linewidth}
 				\begin{itemize}
 					\item \textit{Seien $s$, $n$ und $z$ beliebige Knoten des Graphen $G$, wobei $s$ der Startknoten und $z$ der Zielknoten für die Ermittlung des kürzesten Weges von $s$ zu $z$ sind.}\\
-					\item \textit{Sei $f(n)$ eine Funktion zur Abschätzung der Pfadlänge vom Knoten $s$ zum Knoten $z$, welcher den Knoten $n$ beinhält.}
+					\item \textit{Sei $f(n)$ eine Funktion zur Abschätzung der Pfadlänge vom Knoten $s$ zum Knoten $z$, welcher den Knoten $n$ enthält.}
 				\end{itemize}
 		
 				\begin{enumerate}
