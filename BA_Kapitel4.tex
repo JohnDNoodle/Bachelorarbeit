@@ -26,11 +26,60 @@
 			
 			Eine \acl{SPS} arbeitet nach dem Prinzip eines Echtzeitsystems. Das projektierte Anwenderprogramm wird in einer Endlosschleife zyklisch abgearbeitet. Zu Beginn eines Bearbeitungszyklus wird ein Prozessabbild aller Eingangsbaugruppen  der Steuerung generiert, das für den kompletten Zyklus als Basis für die Werte der Eingänge benutzt wird. Während des Zyklus werden die berechneten Werte für die Ausgänge in ein weiteres Prozessabbild geschrieben, welches erst nach Ende des aktuellen Bearbeitungszyklus an die Ausgangsbaugruppen übertragen wird. Somit müssen Mehrfachzuweisungen innerhalb eines Zyklus vermieden werden, da nur die letzte Zuweisung an die Ausgänge weitergegeben wird \textbf{insert PAE PAA graphic here}. Durch \ac{OB}s können zusätzliche Funktionen außerhalb der zyklischen Bearbeitung realisiert werden. Beispielsweise können im Startup-\ac{OB} einmalig Anweisungen beim Hochfahren der CPU ausgeführt werden.
 	
-	\section{Beschreibung der Anlagentopologie}
+	\section{Realisierung der Anlagentopologie}
+		
+		Als Grundlage für die Wegfindung muss zunächst die Anlage definiert werden. Wie bereits in Kapitel \ref{Graph_Anlage} beschrieben, wird die Anlage durch einen Graphen mit positiven Kantengewichtungen dargestellt. Für die technische Realisierung der Anlage ist unter anderem wichtig, dass die Beschreibung der Topologie erweiterbar ist, und sich der physikalische Aufbau leicht umsetzen lässt.
+		
+		\subsection{Gewählte Anlagentopologie}
+			
+			Im Hinblick auf die in Kapitel \ref{Ziele_Wegfindung} definierten Implementierungsstufen und die dazu gehörigen Use-cases wurde für die Topologie der Anlage eine Matrixstruktur gewählt.  Bei der Platzierung der Bearbeitungsstationen an die Außenkanten der 2x4 Wabenstruktur, können die Fahrstrecken im Inneren als eine Art Überholspur für Fahrzeuge genutzt werden, die sich schneller durch die Anlage bewegen. Zudem wurden Eingangs- und Ausgangsknoten als Start und Endpunkt für die Wegfindung definiert. Als zusätzliche Rückführstrecke für \ac{FTF} nach Beendigung ihres Bearbeitungsauftrags wurde eine Rückführstrecke von dem End- zum Startknoten der Anlage hinzugefügt, welche aber in der Wegberechnung nicht berücksichtigt wird. Der Gesamtaufbau der Anlage wird in \textbf{INSERT GRAPHIC HERE} schematisch dargestellt.
+		
+		\subsection{Physikalische Aufbau}
+			\label{Phys_Anlage}
+			In Kapitel \ref{Alg._Aufgabenstellung} wurde dargelegt, dass die Anlage als Vorführmodell für Konzepte von Industrie 4.0  verwendet werden soll. Somit die Portabilität der Anlage ein wichtiger Punkt. In Zusammenarbeit mit Herrn A. Meier wurde als Basis der Anlage ein modulares System aus leichten Kartonplatten definiert. Aufbauend hierauf werden für die optische Fahrsteuerung die Fahrstrecken mit dunklem Isolierband aufgeklebt. Diese lassen sich bei Bedarf auch entfernen oder modifizieren um Änderungen der Anlagentopologie zu simulieren. Die Kreuzungen der Fahrstrecken, die die Entscheidungspunkte für die Fahrzeugsteuerung und die Wegfindung darstellen, entsprechen den Knoten des korrespondierenden Anlagengraphen, die Fahrstrecken selbst, als Verbindungen zwischen einzelnen Entscheidungspunkten, entsprechen somit den Kanten des Graphen.\textbf{insert photo Anlage}\\
+			Für die Wegfindung ist es zudem wichtig, die aktuelle Position eines Fahrzeugs ermitteln zu können, um diese als Basis für den Startknoten der Berechnung zu benutzen. Aus diesem Grund wurden unterschiedliche Methoden zur Orientierung der Fahrzeuge innerhalb der Anlage untersucht. Da eine zentrale Erfassung der Fahrzeugpositionen durch zusammengeschaltete mechanische, analoge oder optische Sensoren nicht in das Konzept der Dezentralisierung von Industrie 4.0 passt, wurde ein \ac{RFID}-basiertes Identifikationssystem für die Positionserfassung ausgewählt. Dieses funktioniert durch die Anbringung von \ac{RFID}-Transpondern auf der Unterseite der Kartonplatten, jeweils auf Höhe eines Entscheidungsknotens. Jedes Fahrzeug besitzt einen \ac{RFID}-Sensor, welcher vor dem Fahrzeug an einem Ausleger befestigt ist, um Anlagenknoten zu identifizieren, an die sich das Fahrzeug annähert. Hier hat sich die Entscheidung für Kartonplatten zur Anlagenmodellierung als Vorteil erwiesen, da die Transpondersignale auch durch den Karton auf der Oberseite der Anlagenplatten detektierbar ist, und die Transponder somit nicht auf der Fahrstrecke selbst befestigt werden müssen, was zu Behinderungen beim Fahren führen könnte\textbf{insert photo RFID}.
+			
+		\subsection{Beschreibung als Knotenliste}
+			Sowohl für die Wegfindung als auch für die Fahrsteuerung wird eine digitale Repräsentation der Anlage benötigt. Aufgrund der einfachen Erweiterbarkeit wurde hier die Darstellungsform der Knotenliste für Graphen ausgewählt, da bei dieser Datenstruktur einfach Knoten hinzugefügt und entfernt werden können. Für einen Einzelknoten wurde die Anzahl der möglichen Kanten pro Knoten auf vier beschränkt. Dies macht eine Zuordnung der einzelnen Kanten zu den vier Himmelsrichtungen möglich. Dies wird vor allem für die Fahrsteuerung benötigt, da hier eine der Anforderungen die Möglichkeit der Ausführung von 90-Grad-Kurven ist. Da die Fahrsteuerung als getrenntes Programmmodul implementiert wurde besitzt sie eine Kopie der Knotenliste der Anlage mit den zusätzlichen, bei der Wegfindung nicht benötigten Knoten der Rückführstrecke.\\
+			Ein Einzelknoten hat folgenden generellen Aufbau:\\
+			
+			\begin{longtable}{| l | l | l |}
+				
+				\hline
+				\textbf{ID} &
+				\multicolumn{2}{c|}{Nummer des aktuellen Knoten} \\
+				\hline
+				\multirow{8}{*}{Kanten}
+					& ID Nord & verbundener Knoten in Richtung Norden \\ \cline{2-3}
+					& Dist. Nord & Abstand zum Knoten in Richtung Norden\\ \cline{2-3}
+					& ID Ost & verbundener Knoten in Richtung Osten \\ \cline{2-3}
+					& Dist. Ost & Abstand zum Knoten in Richtung Osten\\ \cline{2-3}
+					& ID Süd & verbundener Knoten in Richtung Süden\\ \cline{2-3}
+					& Dist. Süd & Abstand zum Knoten in Richtung Süden\\ \cline{2-3}
+					& ID West & verbundener Knoten in Richtung Westen\\ \cline{2-3}
+					& Dist. West & Abstand zum Knoten in Richtung Westen\\ 
+					\hline
+	
+			\end{longtable}
+			
+			Da in \ac{STEP7} Speicher nicht dynamisch alloziert werden kann, hat jeder Knoten immer Speicherplatz für die Daten von allen vier möglichen Kanten, auch wenn er in der realen Anlage mit weniger als vier Knoten verbunden ist. Da die ID 0 für den Startknoten reserviert wurde werden Verbindungsrichtungen durch eine -1 im ID-Feld als nicht verbunden gekennzeichnet. Hierdurch wird auch der zugehörige Abstand ignoriert.\\
+			Die Datenstruktur der Knotenliste selbst besteht aus einem einfachen Array mit Einzelknoten als Arrayelemente. Dieses Array wird initialisiert mit der einer Konstanten, welche die Gesamtanzahl der möglichen Anlagenknoten enthält. Zusätzlich zu dem Knotenarray besteht der Listendatentyp noch aus der Anzahl der wirklich im Array enthaltenen Knoten. Diese wurde aus Gründen der Konsistenz hinzugefügt , da andere selbst definierte Listentypen im Projekt mit variablen Anzahlen von Arrayelementen arbeiten, was bei der Anlagentopologie nur selten der Fall ist. Dies könnte in diesem Falle genutzt werden wenn zu einem späteren Zeitpunkt weitere Knoten zur Anlage hinzugefügt werden. Hier muss aber ein Neustart des \ac{FTF} da sonst die in Kapitel \ref{Verwendung_Alg} besprochene Heuristik-Berechnung für die neuen Knoten nicht existiert und somit die Knoten nicht für die Wegberechnung verwendet werden können.\textbf{Insert Graphic Datatype TIA}\\
+			Abschließend sei noch erwähnt das die in \ref{Phys_Anlage} erwähnten \ac{RFID}-Werte der Knoten nicht für die Wegfindung relevant sind. Das Einlesen und die Zuordnung von \ac{RFID}s zu den entsprechenden Knoten wird komplett in der Fahrzeugsteuerungsschicht erledigt, welche der Wegfindungsschicht dann nur die ID weitergibt.
+			
+		\subsection{Beschreibung als Adjazenzmatrix}
+		
+			Unter dem Aspekt der Erweiterbarkeit ist die Listendarstellung des Graphen ideal, da Knoten unabhängig von ihrer Position innerhalb der Anlage einfach am Ende der Liste angehängt werden können. Solange der neue Knoten gültig ist, kann der erweiterte Anlagengraph verwendet werden. Für die eigentliche Wegfindung ist eine solche Liste jedoch ungünstig, um schnell den Abstand eines Knotens zu einem beliebigen anderen Knoten zu prüfen. Bei einer Liste müsste im schlechtesten Fall bei Überprüfung des letzten Knotens das komplette Array durchlaufen werden. Aus diesem Grund wird beim Hochfahren der CPU, vor der Berechnung der Heuristik mittels Dijkstra, die Knotenliste geparsed und eine Adjazenzmatrix der Anlage generiert. Hier kann in konstanter Zeit\footnote{Aufwand $\mathcal{O}(1)$} der Abstand zwischen zwei Knoten $x$ und $y$ ermittelt werden, indem einfach der in der Matrix unter den Indizes $(x,y)$ hinterlegte Wert abgerufen wird. Dies beschleunigt vor allem die Laufzeit des im zyklischen Betrieb ausgeführten A*-Algorithmus. Für die Berechnung der Heuristiken ist dies weniger von Bedeutung, da hier keine Zeitbeschränkungen vorliegen und nur der weniger kritische Aspekt der kürzeren Hochfahrzeit der \ac{SPS} beeinflusst wird.\textbf{insert graphic here}
 
-	\section{Implementierung des Dijkstra-Algorithmus}
+	\section{Implementierung der Algorithmen}
+		
+		
+	
+		\subsection{Priority-Queue}
+	
+		\subsection{Dijkstra-Algorithmus und Heuristik-Tabelle}
+		
 
-	\section{Implementierung des A*-Algorithmus}
+		\subsection{A*-Algorithmus}
 	
 	\section{Einhaltung der Echtzeitbedingung}
 	
@@ -39,3 +88,14 @@
 		\subsection{Ausführung bei Systemstart}
 		
 		\subsection{Zyklische Ausführung}
+		
+	\section{Steuerung des Bearbeitungsablaufs}
+	
+		\subsection{Bearbeitungsreihenfolge}
+		
+		\subsection{Zuweisung einer Bearbeitungsstation}
+		
+		\subsection{Simulation der Bearbeitungszeit}
+	
+		
+	\section{Beispiel für eine einfache Routenberechnung}
