@@ -1,12 +1,15 @@
 \chapter{Technische Implementierung der Algorithmen}
 
 	\section{Kurze Einführung in die Programmiersprache und Programmierumgebung}
+	
 		Für die Implementierung der Wegfindung wurde im Kapitel \ref{Aufgabenstellung_Pathfinding} definiert, dass diese auf einer Siemens \ac{SPS} (englisch: \ac{PLC})  der S7-1200er Reihe lauffähig ist. Bei der 1200er Reihe handelt es sich um  Steuerungen des niedrigen Leistungssegments. Für die Projektierung und Programmierung von Anlagen mit Steuerungen dieser Art wird deine proprietäre Entwicklungsumgebung namens \ac{TIA-Portal} von Siemens zur Verfügung gestellt.
+		
 		\subsection{Siemens TIA-Portal}
+		
 			Das Siemens \ac{TIA-Portal} vereinigt viele Aspekte der Projektierung von Anlagen in einer einheitlichen Oberfläche. Innerhalb des \ac{TIA-Portal}s können beispielsweise Projekte bestehend aus mehreren Antrieben und \ac{SPS}en gemeinsam geplant und erstellt werden. Die aktuelle Version des \ac{TIA-Portal}s ist in der Version 13 verfügbar und bietet vor allem eine anwenderfreundliche Oberfläche für komplexe Automatisierungsaufgaben. Die Kernkomponente für die Erstellung von Programmen für \aclp{SPS} ist die Programmierumgebung \acs{STEP7}\footnote{\ac{STEP7}}. Abbildung \textbf{INSERT GRAPHIC HERE} zeigt die Projektansicht des \ac{TIA-Portal}s 
 		
 		\subsection{Programmierumgebung STEP7}
-			Die Grundelemente eines \ac{STEP7}-Projekts sind die projektierten Steuerungen. Diese sind wiederum unterteilt in Teilelemente wie die Hardware-Konfiguration der Steuerung, das Anwenderprogramm, die verwendeten Variablen, benötigte Datentyp-Definitionen und Komponenten zur Überwachung und Modifizierung der Steuerungsdaten im laufenden Betrieb \textbf{Insert grafic here}. Für die Implementierung der Wegfindungsalgorithmen sind vor allem das Steuerungsprogramm und die darin verwendeten Datentypen von Bedeutung. Ein Anwenderprogramm besteht aus bis zu vier Arten von Programmbausteinen:
+			Die Grundelemente eines \ac{STEP7}-Projekts sind die projektierten Steuerungen. Diese sind wiederum unterteilt in Teilelemente wie die Hardware-Konfiguration der Steuerung, das Anwenderprogramm, die verwendeten Variablen, benötigte Datentyp-Definitionen und Komponenten zur Überwachung und Modifizierung der Steuerungsdaten im laufenden Betrieb \textbf{Insert grafic here}. Für die Implementierung der Wegfindungsalgorithmen sind vor allem das Steuerungsprogramm und die darin verwendeten Datentypen von Bedeutung. Ein Anwenderprogramm besteht aus bis zu vier Arten von Programmbausteinen\cite{STEP7Prog}:
 			
 			\begin{tabular}{{p{4.5cm} p{10cm}}}
 				
@@ -17,7 +20,8 @@
 				
 			\end{tabular}
 			
-			\ac{FC}s und \ac{FB}s entsprechen den Funktionsdefinitionen in anderen Programmiersprachen. Es können die Schnittstellen der Bausteine sowie deren Schnittstellentypen definiert werden. IN-Variablen werden beispielsweise nur lesend verwendet, OUT-Variablen werden nur schreibend verwendet und INOUT-Variablen werden sowohl schreibend als auch lesend verwendet. Innerhalb eines Bausteins können sowohl temporäre als auch statische\footnote{persistent über Funktionsaufrufe hinaus} Variablen zur Zwischenspeicherung von Variablenwerten während der Programmabarbeitung genutzt werden. Da statische Variablen einen Instanz-\ac{DB} benötigen, sind sie nur in \ac{FB}s verwendbar.
+			\ac{FC}s und \ac{FB}s entsprechen den Funktionsdefinitionen in anderen Programmiersprachen. Es können die Schnittstellen der Bausteine sowie deren Schnittstellentypen definiert werden. IN-Variablen werden beispielsweise nur lesend verwendet, OUT-Variablen werden nur schreibend verwendet und INOUT-Variablen werden sowohl schreibend als auch lesend verwendet. Innerhalb eines Bausteins können sowohl temporäre als auch statische\footnote{persistent über Funktionsaufrufe hinaus} Variablen zur Zwischenspeicherung von Variablenwerten während der Programmabarbeitung genutzt werden. Da statische Variablen einen Instanz-\ac{DB} benötigen, sind sie nur in \ac{FB}s verwendbar.\\
+			
 			Die Bausteine können in einer von vier Programmiersprachen geschrieben werden. \ac{FUP} und \ac{KOP} sind Sprachen zur graphischen Programmierung. \ac{AWL} ist eine Assembler-ähnliche Sprache für generelle Programmieraufgaben, die unter anderem die byteweise Manipulation von Daten vereinfacht. \ac{SCL} ist eine Pascal-ähnliche Programmiersprache, die durch ihre einfachen Implementierungsmöglichkeiten von Schleifen geeignet ist für die Programmierung komplexer Aufgabenstellungen \textbf{insert comparison graphic here}. Bei der Erstellung des Anwenderprogramms für die Wegfindung wurden die Verwendeten \ac{OB}s in \ac{FUP} erstellt und alle anderen Bausteine in SCL.
 			
 		%\subsection{SCL}
@@ -37,10 +41,13 @@
 		\subsection{Physikalische Aufbau}
 			\label{Phys_Anlage}
 			In Kapitel \ref{Alg._Aufgabenstellung} wurde dargelegt, dass die Anlage als Vorführmodell für Konzepte von Industrie 4.0  verwendet werden soll. Somit die Portabilität der Anlage ein wichtiger Punkt. In Zusammenarbeit mit Herrn A. Meier wurde als Basis der Anlage ein modulares System aus leichten Kartonplatten definiert. Aufbauend hierauf werden für die optische Fahrsteuerung die Fahrstrecken mit dunklem Isolierband aufgeklebt. Diese lassen sich bei Bedarf auch entfernen oder modifizieren um Änderungen der Anlagentopologie zu simulieren. Die Kreuzungen der Fahrstrecken, die die Entscheidungspunkte für die Fahrzeugsteuerung und die Wegfindung darstellen, entsprechen den Knoten des korrespondierenden Anlagengraphen, die Fahrstrecken selbst, als Verbindungen zwischen einzelnen Entscheidungspunkten, entsprechen somit den Kanten des Graphen.\textbf{insert photo Anlage}\\
+			
 			Für die Wegfindung ist es zudem wichtig, die aktuelle Position eines Fahrzeugs ermitteln zu können, um diese als Basis für den Startknoten der Berechnung zu benutzen. Aus diesem Grund wurden unterschiedliche Methoden zur Orientierung der Fahrzeuge innerhalb der Anlage untersucht. Da eine zentrale Erfassung der Fahrzeugpositionen durch zusammengeschaltete mechanische, analoge oder optische Sensoren nicht in das Konzept der Dezentralisierung von Industrie 4.0 passt, wurde ein \ac{RFID}-basiertes Identifikationssystem für die Positionserfassung ausgewählt. Dieses funktioniert durch die Anbringung von \ac{RFID}-Transpondern auf der Unterseite der Kartonplatten, jeweils auf Höhe eines Entscheidungsknotens. Jedes Fahrzeug besitzt einen \ac{RFID}-Sensor, welcher vor dem Fahrzeug an einem Ausleger befestigt ist, um Anlagenknoten zu identifizieren, an die sich das Fahrzeug annähert. Hier hat sich die Entscheidung für Kartonplatten zur Anlagenmodellierung als Vorteil erwiesen, da die Transpondersignale auch durch den Karton auf der Oberseite der Anlagenplatten detektierbar ist, und die Transponder somit nicht auf der Fahrstrecke selbst befestigt werden müssen, was zu Behinderungen beim Fahren führen könnte\textbf{insert photo RFID}.
 			
 		\subsection{Beschreibung als Knotenliste}
+			\label{Knotenliste}
 			Sowohl für die Wegfindung als auch für die Fahrsteuerung wird eine digitale Repräsentation der Anlage benötigt. Aufgrund der einfachen Erweiterbarkeit wurde hier die Darstellungsform der Knotenliste für Graphen ausgewählt, da bei dieser Datenstruktur einfach Knoten hinzugefügt und entfernt werden können. Für einen Einzelknoten wurde die Anzahl der möglichen Kanten pro Knoten auf vier beschränkt. Dies macht eine Zuordnung der einzelnen Kanten zu den vier Himmelsrichtungen möglich. Dies wird vor allem für die Fahrsteuerung benötigt, da hier eine der Anforderungen die Möglichkeit der Ausführung von 90-Grad-Kurven ist. Da die Fahrsteuerung als getrenntes Programmmodul implementiert wurde besitzt sie eine Kopie der Knotenliste der Anlage mit den zusätzlichen, bei der Wegfindung nicht benötigten Knoten der Rückführstrecke.\\
+			
 			Ein Einzelknoten hat folgenden generellen Aufbau:\\
 			
 			\begin{longtable}{| l | l | l |}
@@ -63,39 +70,149 @@
 			\end{longtable}
 			
 			Da in \ac{STEP7} Speicher nicht dynamisch alloziert werden kann, hat jeder Knoten immer Speicherplatz für die Daten von allen vier möglichen Kanten, auch wenn er in der realen Anlage mit weniger als vier Knoten verbunden ist. Da die ID 0 für den Startknoten reserviert wurde werden Verbindungsrichtungen durch eine -1 im ID-Feld als nicht verbunden gekennzeichnet. Hierdurch wird auch der zugehörige Abstand ignoriert.\\
+			
 			Die Datenstruktur der Knotenliste selbst besteht aus einem einfachen Array mit Einzelknoten als Arrayelemente. Dieses Array wird initialisiert mit der einer Konstanten, welche die Gesamtanzahl der möglichen Anlagenknoten enthält. Zusätzlich zu dem Knotenarray besteht der Listendatentyp noch aus der Anzahl der wirklich im Array enthaltenen Knoten. Diese wurde aus Gründen der Konsistenz hinzugefügt , da andere selbst definierte Listentypen im Projekt mit variablen Anzahlen von Arrayelementen arbeiten, was bei der Anlagentopologie nur selten der Fall ist. Dies könnte in diesem Falle genutzt werden wenn zu einem späteren Zeitpunkt weitere Knoten zur Anlage hinzugefügt werden. Hier muss aber ein Neustart des \ac{FTF} da sonst die in Kapitel \ref{Verwendung_Alg} besprochene Heuristik-Berechnung für die neuen Knoten nicht existiert und somit die Knoten nicht für die Wegberechnung verwendet werden können.\textbf{Insert Graphic Datatype TIA}\\
+			
 			Abschließend sei noch erwähnt das die in \ref{Phys_Anlage} erwähnten \ac{RFID}-Werte der Knoten nicht für die Wegfindung relevant sind. Das Einlesen und die Zuordnung von \ac{RFID}s zu den entsprechenden Knoten wird komplett in der Fahrzeugsteuerungsschicht erledigt, welche der Wegfindungsschicht dann nur die ID weitergibt.
 			
 		\subsection{Beschreibung als Adjazenzmatrix}
-		
+			\label{Adjazenzmatrix}
 			Unter dem Aspekt der Erweiterbarkeit ist die Listendarstellung des Graphen ideal, da Knoten unabhängig von ihrer Position innerhalb der Anlage einfach am Ende der Liste angehängt werden können. Solange der neue Knoten gültig ist, kann der erweiterte Anlagengraph verwendet werden. Für die eigentliche Wegfindung ist eine solche Liste jedoch ungünstig, um schnell den Abstand eines Knotens zu einem beliebigen anderen Knoten zu prüfen. Bei einer Liste müsste im schlechtesten Fall bei Überprüfung des letzten Knotens das komplette Array durchlaufen werden. Aus diesem Grund wird beim Hochfahren der CPU, vor der Berechnung der Heuristik mittels Dijkstra, die Knotenliste geparsed und eine Adjazenzmatrix der Anlage generiert. Hier kann in konstanter Zeit\footnote{Aufwand $\mathcal{O}(1)$} der Abstand zwischen zwei Knoten $x$ und $y$ ermittelt werden, indem einfach der in der Matrix unter den Indizes $(x,y)$ hinterlegte Wert abgerufen wird. Dies beschleunigt vor allem die Laufzeit des im zyklischen Betrieb ausgeführten A*-Algorithmus. Für die Berechnung der Heuristiken ist dies weniger von Bedeutung, da hier keine Zeitbeschränkungen vorliegen und nur der weniger kritische Aspekt der kürzeren Hochfahrzeit der \ac{SPS} beeinflusst wird.\textbf{insert graphic here}
 
 	\section{Implementierung der Algorithmen}
-		
-		
 	
+		Das gesamte Programm wurde in einzelne funktionale Schichten aufgebaut, um den Industrie 4.0 Aspekt der Modularisierung darzustellen. Somit macht es keinen funktionalen Unterschied, ob die Wegfindungschicht tatsächlich auf derselben Steuerung läuft wie die Fahrzeugsteuerungsschicht. Als Schnittstelle dienen hier sowohl bei der Wegfindungs- als auch bei der Fahrzeugsteuerungsschicht  Datenbausteine, in welche die zu übertragenden Ergebnisse geschrieben werden. Diese Daten werden durch die in Kapitel \ref{Kommunikation} näher beschriebene Kommunikationsschicht übertragen. Dies hat den Vorteil das unterschiedliche Arten der Kommunikation einfach ausgetauscht werden können, ohne die anderen Schichten zu beeinflussen.\textbf{insert schicht graphic here}.\\
+		
+		Die in Kapitel \ref{Theorie} beschriebenen Algorithmen wurden beide auf ähnliche Weise in \ac{STEP7} implementiert. Für die A* und Dijkstra wurden jeweils geeignete Datentypen definiert, welche an die Anforderungen der Algorithmen angepasst wurden. Die Implementierung verwendet hier in beiden Fällen eine Priority-Queue auf Basis eines Arrays, um bei der Berechnung den jeweils nächsten besten Knoten zu identifizieren. Das Array als Grundlage der Prioritätsschlange wurde hier gewählt, da sich die Realisierung in \ac{STEP7} einfacher gestaltet als beispielsweise eines Heaps. Dafür müssen hier Abstriche bei der Sortiergeschwindigkeit gemacht werden.
+		
+		\subsection{Berechnungsdatentypen}
+			
+			Für die Berechnung der Algorithmen wurden Datentypen erstellt, die alle für den Algorithmus benötigten Informationen enthalten. Die Datentypen beschreiben die Knoten einzeln und werden zur Berechnung in eine Priority-Queue eingefügt. Als Ergebnis der Berechnung wird eine geordnete Liste der Einzelknoten ausgegeben. Die Datentypen enthalten folgende Grunddaten:
+			
+			\begin{longtable}{| l | l |}
+				\hline
+				\textbf{NodeID} & ID des betrachteten Knotens\\ \hline
+				\textbf{Dist. to Start} & Bisher zurückgelegter Weg\\ \hline
+				\textbf{Expected Dist.} & Vorausichtl. Gesamtpfadlänge durch diesen Knoten (nur A*)\\ \hline
+				\textbf{ParentID} & Vorgängerknoten\\
+				\hline
+			\end{longtable}
+			
+			Der bisher zurückgelegte Weg gibt bei der Dijkstra-Implementierung Aussagen wie weit ein Knoten von einem Startknoten entfernt ist. Wird dieser Startknoten später als Ziel gewählt, so kann der Abstand als Heuristik für A* verwendet werden\footnote{Bei gerichteten Graphen muss zusätzlich die Gegenrichtung betrachtet werden.}. Da jeweils der kürzeste Weg gesucht ist, wird für diese Datenkomponente sowie auch für den voraussichtlichen Gesamtweg der Initialwert auf den Maximalwert des verwendeten Datentyps gesetzt, in diesem Fall 65535 für 16-Bit Integer.\\
+			
+			Die voraussichtliche Pfadlänge bei dem Datentyp für den A*-Algorithmus setzt sich zusammen aus dem bisher zurückgelegten Weg und dem geschätzten Wert für den restlichen Weg zum Ziel. Bei Verwendung einer exakten Heuristik ist dieser Wert für alle Knoten auf dem kürzesten Pfad immer konstant, solange sich die Anlage seit Berechnung der Dijkstra-Heuristik nicht verändert hat.\\
+			
+			Der Zeiger zum Vorgängerknoten wurde hier als einfache Zahl implementiert, da das Pointer-Konstrukt in \ac{STEP7} etwas anders funktioniert als beispielsweise in der Programmiersprache C. Dies hat den Nachteil das bei der Zusammenstellung der Route anhand der Knotenliste etwas mehr Zeit verwendet werden muss, da die Liste jeweils nach dem Vorgängerknoten durchsucht werden muss.
+		
 		\subsection{Priority-Queue}
-	
-		\subsection{Dijkstra-Algorithmus und Heuristik-Tabelle}
 		
+			Da in \ac{STEP7} keine Container-Datentypen existieren, die mit unterschiedlichen Elementen zurechtkommen, wurden für beide Algorithmen getrennte Datentypen für die Priority-Queue definiert. Diese existieren analog zu der in \ref{Knotenliste} beschriebenen Anlagenknotenliste aus einem Array der Knotenelemente und der Anzahl der beinhalteten Elemente. Dies wurde aus Gründen der Effizienz auf diese Art realisiert, da der große Vorteil des A*-Algorithmus vor allem darin liegt, dass nur ein kleiner Teil der Knoten der Anlage betrachtet werden muss. Da das Array aber nicht dynamisch mit der benötigten Größe alloziert werden kann, sondern immer den schlechtesten Fall berücksichtigen muss, wurde zur Initialisierung des Arrays die Gesamtanzahl der Anlagenknoten als Konstante verwendet. Damit somit nicht bei den Priority-Queue-Operationen die leeren Restplätze des Arrays mit bearbeitet werden, wurde die Anzahl der Knoten als Datenkomponente mit hinzugefügt. Besteht die Anlage beispielsweise aus 40 Knoten aber es befinden sich nur 6 echte Knoten in der Prioritätsschlange, so laufen alle Schleifen nur über die Elemente null bis fünf.\\
+			
+			Zur Verwendung der Priority-Queue wurden für beide Listendatentypen Zugriffs- und Verwaltungsfunktionen implementiert. \ac{STEP7} besitzt zwar die Möglichkeit Funktionen mittels eines sogenannten VARIANT-Pointers so zu implementieren, dass sie analog zum Konzept der Überladung mit unterschiedlichen Eingangsdatentypen zurechtkommen\cite{STEP7Prog}, dies ist in diesem Fall aber nicht möglich, da nicht effizient auf die Einzelelemente des Datentyps zugegriffen werden kann. Aus diesem Grund wurden die folgenden Operationen für jeden der beiden Datentypen Implementiert:
+			
+			\begin{itemize}
+				\item \textbf{Insert}: Einfügen eines Knotens in die Priority-Queue.
+				\item \textbf{Pop}: Ausgabe und Entfernung des nach der Prioritätsbedingung "`besten"' Knotens aus der Priority-Queue.
+				\item \textbf{Sort}: Wiederherstellung der Prioritätsschlangeneigenschaften durch Sortierung.
+				\item \textbf{Contains}: Überprüfung, ob Knoten bereits in der Schlange enthalten ist.
+				\item \textbf{UpdateNode}: Modifizierung eines Knotens in der Priority-Queue.
+			\end{itemize}
+			
+			Die Operationen "`Insert"', "`Pop"' und "`UpdateNode"' beinhalten alle eine abschließende Wiederherstellung  der Prioritätsbedingung mittels der in \textbf{INSERT CODE REFERENCE HERE} dargestelten "`Sort"'-Funktion.\\
+			Um die Zugriffsoperationen effizienter zu machen, wurden die Prioritätsschlangen so implementiert, dass das beste Element der letzte gültige Knoten im Array an dem Index $Anzahl - 1$ ist. Dies Vereinfacht das Entfernen des besten Knotens, da nach der Ausgabe nur die Anzahl um eins dekrementiert wird und nicht jeder Knoten nachgerückt werden muss, wie es der Fall wäre wenn das beste Element am Anfang stehen würde.
+			
+		\subsection{Dijkstra-Algorithmus und Heuristik-Tabelle}
+			
+			Die eigentliche Implementierung des Dijkstra-Algorithmus ist recht einfach möglich. Zunächst muss die Prioritätsschlange mit allen Knoten der Anlage gefüllt\footnote{Gruppen II und III aus Abschnitt \ref{Dijkstra_Alg} werden gemeinsam in der Prioritätsschlange gehalten.} und die Distanz des Startknotens auf null gesetzt werden. 
+			Da hier keine Route gesucht wird sondern nur ein Abstand zum Startknoten, wird der Algorithmus nicht beendet wenn ein bestimmter Zielknoten erreicht wurde, sondern erst wenn alle Knoten betrachtet worden sind. Bereits betrachtete Knoten werden gemäß des in Abschnitt \ref{Dijkstra_Alg} beschriebenen Prinzips aus der Priority-Queue in eine geordnete Knotenliste übertragen. Dieser Heuristikliste genannte Datentyp enthält die Knotenelemente aufsteigend sortiert nach Abstand zum Startknoten.\\
+			
+			Der gesamte Dijkstra-Algorithmus wird in einem \ac{FC} mit dem Namen "`FC\_buildHeuristicList"' berechnet \textbf{Insert graphic FC here}. Dieser Baustein wird für jeden Knoten der Anlage aufgerufen, der als Endzielknoten\footnote{vergleiche Abschnitt \ref{Verwendung_Alg}.} markiert ist. Wie bereits erwähnt wird dieser Baustein in einer Schleife im "`\ac{OB}100 Startup"' aufgerufen. Die resultierenden Heuristiklisten werden in einem Datentyp namens Heuristiktabelle in der Arraykomponente gespeichert und im zyklischen Betrieb von dem A*-Algorithmus verwendet. 
+			\\
+			\\
+			\textbf{Notiz: Bausteine näher beschreiben? mit Auflistung und Erklärung aller Schnittstellen?}
+			
 
 		\subsection{A*-Algorithmus}
-	
+			\label{Implementierung A*}
+			Die Implementierung des A*-Algorithmus ähnelt der des Dijkstra-Algorithmus. Auch hier muss vor Beginn der Berechnung zunächst die Priority-Queue vorbereitet werden. Da der A*-Baustein im Gegensatz zu dem Dijkstra-Baustein mehr als einmal aufgerufen wird,  bedeutet dies, dass die Prioritätsschlange zunächst in den Grundzustand versetzt werden muss, indem alle Knoten aus vorherigen Berechnungen entfernt werden. Zudem muss die Liste der geschlossenen Knoten, die in Abschnitt \ref{A*-Alg} erwähnt wurde, komplett geleert werden, damit kein Knoten bei der Routenberechnung fälschlicherweise als bereits betrachtet angesehen wird.\\
+			
+			Die Berechnung selbst startet nun mit dem Hinzufügen des Startknotens zur Priority-Queue, welche die Liste der offenen Knoten\footnote{Open-List} darstellt. Es wird nun immer der beste Knoten aus der Priority-Queue herausgenommen und als geschlossen markiert. Im Anschluss wird die Adjazenzmatrix nach neuen erreichbaren Knoten durchsucht. Falls diese noch nicht als geschlossen markiert wurden wird geprüft, ob die Verbindungskante zu dem neuen Knoten in einer speziellen Matrix für permanente Blockaden als blockiert gekennzeichnet wurde. Ist dies nicht der Fall so wird der neue Knoten zu der Liste der offenen Knoten hinzugefügt. Der fertig betrachtete geschlossene Knoten wird dann in die statische Routenliste eingefügt, aus der nach dem Ende der Berechnung die Route generiert wird. Wird der Zielknoten erreicht oder befinden sich keine Knoten mehr in der Priority-Queue, so beendet sich der Algorithmus. Die Routenliste wird in die Ausgangsvariable kopiert und der Baustein meldet das Berechnungsende über einen Bitmerker an die übergeordnete Wegfindungsschicht.\\
+			
+			Die Erkennung von permanenten Blockaden wurde durch eine Matrix realisiert, da hier, wie auch bei der Adjazenzmatrix, in konstanter Zeit geprüft werden kann ob auf dem betrachteten Streckenabschnitt Behinderungen vorliegen. Diese permanenten Blockaden liegen über längere Zeitintervalle vor und können deshalb bereits zu Beginn der Routenberechnung berücksichtigt werden. Dies ist bei temporären Blockaden durch andere Fahrzeuge nicht der Fall, weshalb zur Erkennung dieser Art von Behinderungen ein anderer Mechanismus zur Anwendung kommt, der in Abschnitt \ref{Kollisionsvermeidung} näher beschrieben wird.
+			
+			
 	\section{Einhaltung der Echtzeitbedingung}
-	
-		\cite{BorisCherkassky1993}
+		
+		Wenn die Wegfindungsschicht auf der gleichen \ac{SPS} wie die Fahrzeugsteuerungsschicht implementiert wird, so muss die Wegberechnung vor allem bestimmte zeitliche Anforderungen erfüllen, damit die Fahrzeugsteuerung nicht beeinträchtigt wird. Eine Steuerung arbeitet im zyklischen Betrieb alle \ac{OB}s nacheinander ab, die als zyklisch definiert wurden. Durch die Modularität des Anwenderprogramms besitzt jede Schicht ihren eigenen zyklischen \ac{OB}, da sie nur so unabhängig von den anderen Schichten ist.  Dies bedeutet, das eine Berechnung eines Weges die CPU nicht so lange in Anspruch nehmen darf, das in dieser Zeit beispielsweise ein überfahrener RFID-Knoten nicht eingelesen wird und somit eine  bevorstehende Kreuzung nicht erkannt wird. Dies führt spätestens beim nächsten erreichten Knoten zu der Erkennung eines Fehlers und das Fahrzeug geht in einen permanenten Fehlerzustand. Ebenso kann es bei zu langer CPU-Belegung vorkommen, dass das Fahrzeug die Spur verliert und dies erst bemerkt wenn es komplett von der Fahrstrecke abgekommen ist. Aus diesem Grund ist es sehr wichtig, die Wegfindungsschicht so anzupassen, dass die zwischen zwei Ausführungen der Fahrzeugsteuerung höchsten 10ms liegen. Da auch die Kommunikationsschichten zyklische \ac{OB}s besitzen, die der Reihenfolge nach abgearbeitet werden müssen, wurde festgelegt, das die Wegberechnung maximal 5ms dauern darf. Dies hat einige Konsequenzen für die Implementierung der Wegfindungsalgorithmen.
+		
 	
 		\subsection{Ausführung bei Systemstart}
-		
+			
+			Wie bereits mehrfach erwähnt wird die Heuristiktabelle beim Hochfahren der CPU generiert. Eigentlich ist es nicht notwendig für den A*-Algorithmus, dass bereits ein Wert für die Heuristik existiert. Es könnte auch im zyklischen Betrieb ein Wert für die Abschätzungsfunktion $f(n)$ aus Abschnitt \ref{Heuristik} berechnet werden, beispielsweise mittels einer Funktion für die Manhattan-Distanz, welche den Abstand zweier Knoten anhand der Differenz der Koordinaten ermittelt. Dies würde den Speicherverbrauch erheblich reduzieren, da keine großen Tabellen gespeichert werden müssten, sondern nur die jeweiligen Koordinaten der Knotenpunkte.\\
+			
+			Die Berechnung einer Funktion $f(n)$ ist aber zeitintensiver als das Nachschlagen von Werten in einer Tabelle. Da der Speicherbedarf für die Tabelle der realisierten Anlage mit 25 Knoten und 10 Endzielknoten nur insgesamt 2300 Byte beträgt, fällt dies selbst bei der kleinsten Steuerung vom Typ S7-1214C mit 100kB Arbeitsspeicher kaum ins Gewicht. Zugleich kann die Laufzeit des A*-Algorithmus im zyklischen Betrieb deutlich reduziert werden, da die Tabellenheuristik mittels Dijkstra, im Gegensatz zur Manhatten-Distanz, eine exakte Heuristik liefert, die zusätzlich zur eingesparten Rechenzeit noch die Anzahl der betrachteten Knoten minimiert.\\
+			
+			Da die Berechnung des Dijkstra-Algorithmus aber unter anderem auch wegen der gewählten Implementierung mit arraybasierten Priority-Queues zeitintensiv ist\cite{BorisCherkassky1993} und einige Sekunden dauern kann, muss die Tabellengenerierung zu einem Zeitpunkt geschehen, an dem die Echtzeitbedingung der Fahrzeugsteuerungsschicht nicht greift. Aus diesem Grund wurde der Hochfahrvorgang der CPU gewählt, um die notwendigen Initialisierungen der Heuristiktabelle durchzuführen, da hier weder die Fahrzeugsteuerung noch der Watchdogtimer, welcher den zyklischen Betrieb standardmäßig auf 50ms beschränkt, aktiv ist. Zusätzlich wird zu diesem Zeitpunkt noch die Adjazenzmatrix aus der Anlagentopologie generiert, da auch der Parsevorgang der Anlagenknoten bei größeren Anlagen etwas mehr Zeit in Anspruch nehmen kann.
+				
 		\subsection{Zyklische Ausführung}
 		
+			Trotz der Auslagerung der Heuristikberechnung auf die Hochlaufphase der CPU kann bei langen Routen nicht garantiert werden, das die als Ziel gesetzten 5ms für die Berechnungszeit eingehalten werden. Vor allem wenn sich die Anlage seit dem Hochfahren des Fahrzeugs stark verändert hat und somit die Heuristiktabelle keine exakte Heuristikwerte mehr liefert, müssen unter Umständen zusätzliche Knoten betrachtet werden, die nicht auf dem kürzesten Pfad vom Start- zum Zielknoten liegen. Der Aufwand für die Berechnung verschiebt sich also immer mehr nach $\mathcal{O}(|\mathcal{V}|^2)$ wie in Abschnitt \ref{Aufwand_A*} erläutert wurde.\\
+			
+			Aus diesem Grund wurde der A*-Algorithmus so implementiert, das der Zeitaufwand pro Zyklus einigermaßen konstant bleibt. Dies wurde erreicht indem die Schleife, welche läuft, solange das Ziel noch nicht erreicht ist, aufgetrennt und durch eine konditionale IF-Abfrage ersetzt wurde. Nach der Schleifenauftrennung wird immer nur ein Knoten untersucht und gegebenenfalls seine Verbindungsknoten zur Open-List hinzugefügt, weitere Knoten werden erst in den darauf folgenden Zyklen expandiert. Dies hat zur Folge, das zwar die Bearbeitungszeit pro Zyklus sehr kurz gehalten wird, im implementierten Beispiel eine Zykluszeit der Wegfindungsschicht kleiner 1ms, die Zeit bis zur Berechnung einer kompletten Route jedoch deutlich länger wird. Dies  ist der Fall, da zwischen jeweils zwei Schleifendurchläufen immer die kompletten \ac{OB}s der anderen Schichten abgearbeitet werden. Dieses Problem kann aber zunächst vernachlässigt werden und wird im Abschnitt \ref{Interne Kommunikation} näher behandelt.\\
+			
+			Ein zweites Problem, das bei der Aufteilung des Algorithmus auf mehrere Zyklen auftritt ist die Inkonsistenz von Routen. Während der Berechnung des Algorithmus darf die in Abschnitt \ref{Implementierung A*} erwähnte Routenliste nicht als gültige Route missverstanden werden, da hierdurch das Fahrzeug eine möglicherweise falsche Route nehmen würde, die nicht zum Ziel führt. Somit darf der Baustein nur finale Routen ausgeben, und temporäre Routen nur intern speichern. Da der Baustein jedoch in mehreren Zyklen hintereinander aufgerufen wird und zwischen zwei Aufrufen die bereits berechneten Daten nicht verloren gehen dürfen, muss er vom Typ \ac{FB} sein, da nur diese Bausteine einen zugeordneten Instanz-Datenbaustein besitzen, in dem Werte über den Funktionsaufruf hinaus zwischengespeichert werden können.\\
+			Durch die Kombination dieser beiden Maßnahmen, kann erreicht werden, dass die CPU-Belegung durch die Wegfindungsschicht im zyklischen Betrieb, quasi konstant\footnote{immer noch abhängig von der Kantenanzahl des aktuell betrachteten Knotens. } auf >1ms gehalten werden kann.
+		
 	\section{Steuerung des Bearbeitungsablaufs}
+		
+		Die Wegfindung innerhalb der Anlage besteht nicht allein aus der Berechnung von kürzesten Pfaden zwischen zwei Anlagenknoten. Sie muss unter anderem auch wissen, welcher Bearbeitungsschritt als nächstes ausgeführt werden soll und welcher Anlagenknoten die korrespondierende Funktionalität besitzt. Zudem soll es möglich sein, dass mehrere Bearbeitungsstationen die gleiche Funktionalität bereitstellen. In diesem Fall muss eine geeignete Station ausgewählt und der Weg zu dem entsprechenden Knoten berechnet werden können.
 	
 		\subsection{Bearbeitungsreihenfolge}
 		
+			Im Abschnitt \ref{Aufgabenstellung_Pathfinding} definiert, dass das Fahrzeug selbst die Ablaufreihenfolge der Bearbeitungsschritte kennt. Diese Anforderung wurde durch die Implementierung des Datentyps "`Assignment"' realisiert. Dieser Datentyp stellt eine Art Rezept dar, indem gespeichert ist, welche Funktionalitäten ein bestimmtes Werkstück benötigt\footnote{Anlagenein- und Ausgänge sind auch Funktionalitäten, die erfasst werden.}. Er ist zusammengesetzt aus der Anzahl der benötigten Funktionalitäten sowie einer Liste der zugehörigen FunktionalitätsIDs. Hierfür muss jedoch zunächst definiert sein, welche Funktionalitäten in der Anlage zur Verfügung gestellt werden und wie die Knoten lauten, die diese Funktionalität bereitstellen. Für diese Aufgabe wurde ein Datentyp definiert, welcher wie folgt aufgebaut ist:
+			
+			\begin{longtable}{| l | l |}
+				
+				\hline
+				\textbf{FunctionID} & Kennziffer der bereitgestellten Funktionalität.\\ \hline
+				\textbf{Nr. of Stations} & Anzahl Stationen, die diese Funktionalität bereitstellen.\\ \hline
+				\textbf{Cluster} & KnotenIDs der Stationen, die diese Funktionalität besitzen.\\
+				\hline
+				
+			\end{longtable}
+			
+			Dieses Funktionscluster ermöglicht es nun, Rezepte unabhängig von spezifischen Bearbeitungsstationen zu formulieren. Die Bearbeitungsreihenfolge eines Werkstücks kann somit ausgedrückt werden durch eine Liste aufeinanderfolgender Funktionalitäten, die ein bestimmtes Werkstück benötigt. Im Verlauf der Abarbeitung des Rezepts wählt das Fahrzeug selbst eine der im Cluster angegebenen Stationen zur benötigten Funktionalität aus. Das Rezept muss der Wegfindungsschicht während des gesamten Bearbeitungsvorgangs zur Verfügung stehen, um die Auswahl des jeweils nächsten Routenziels zu ermöglichen. Daraus folgt, das Rezepte nach der Zuweisung zu einem Werkstück bis zum Abarbeitungsende gespeichert werden müssen.\\
+			
+			Zur Erfassung der Daten von Fahrzeugen, werden die folgenden Informationen gespeichert:
+			
+			\begin{itemize}
+				\item ID des Fahrzeugs, zur Unterscheidung unterschiedlicher Fahrzeuge.
+				\item ID des zuletzt besuchten Knotens innerhalb der Anlage.
+				\item ID des nächsten Knotens. 
+				\item ID des Zielknotens der Aktuellen Route.
+				\item Indexnummer des derzeitigen Bearbeitungsschritts innerhalb des zugewiesenen Rezepts.
+				\item Das zugewiesene Rezept.
+			\end{itemize} 
+			
+			Die ersten drei Punkte sind für alle erfassten Fahrzeuge wichtig, die restlichen Informationen müssen zum derzeitigen Implementierungsstand nur vom eigenen Fahrzeug erfasst werden. Mittels der ID des letzten und des nächsten Knotens kann die Graphenkante identifiziert werden, auf der sich das Fahrzeug momentan befindet. Durch Vergleich des zuletzt besuchten Knotens mit dem Zielknoten der Route wird das Ende der Teilroute erkannt. Auf welchem Weg die benötigten Informationen gesammelt werden, wird im  Kapitel \ref{Kommunikation} näher betrachtet.\textbf{insert graphic of vehiclecontrolblock with assignment here}\\
+			
+			Die Zuweisung von Rezepten erfolgt für jedes Fahrzeug beim Eintritt in die Anlage. Der Anlagenknoten 0 stellt in der realisierten Modellanlage den Startknoten dar. Bei Erkennung des Startknotens wird ein Rezept aus der verfügbaren Rezeptliste ausgewählt und dem Fahrzeug zugewiesen. Nach einer kurzen Wartezeit startet die Wegfindungsschicht die Berechnung der Route zur ersten Funktionalität des zugewiesenen Rezepts. Beim Verlassen der Anlage deaktiviert sich die Wegfindung und es wird eine statische Route über die Rückführstrecke zum Anlageneingang zurück gesendet. Beim Erreichen des Eingangsknotens wird erneut ein Rezept zugewiesen. Dies ermöglicht eine endlose Wiederholung des Bearbeitungsvorgangs  mit unterschiedlichen Rezepten bis zum Abbruch durch den Benutzer.\\
+			
+			Ggf für Fazit: Eine geplante Erweiterung der Anlage sieht vor, das die Zuweisung von Rezepten durch ein zentrales Steuersystem außerhalb der Anlage abgewickelt wird. Dies Funktion wurde jedoch noch nicht implementiert, weshalb die Zuweisung innerhalb der Wegfindungsschicht stattfindet.
+			
+		
 		\subsection{Zuweisung einer Bearbeitungsstation}
+			\label{Zuweisung_Station}
+			Existiert pro Funktionalität nur eine Station, so ist die Zuweisung trivial. Existieren aber mehrere Bearbeitungsstation innerhalb eines Funktionalitätsclusters, so muss eine Station ausgewählt werden, welche als Ziel für die nächste Routenberechnung dient. Ein Problem das hierbei auftreten kann ist die ungleichmäßige Auslastung einzelner Bearbeitungsstationen innerhalb eines Clusters. Abbildung \textbf{Insert graphic auslastungsbeispiel here} zeigt zwei Stationen mit der gleichen Funktion, wobei sich eine Station näher am Anlageneingang befindet als die zweite. Würden Bearbeitungsstationen nur nach dem Kriterium des kürzesten Weges ausgewählt, so würden alle Fahrzeuge, welche die Anlage betreten, in den meisten Fällen Station 1 anfahren, Station 2 würde nur dann ausgewählt wenn Station 1 belegt ist oder aufgrund von Streckenblockaden der Weg zu Station 2 kürzer ist. Dies würde zu einer verhältnismäßig höheren Auslastung von Bearbeitungsstation 1 führen. Dies ist im industriellen Umfeld jedoch nicht erwünscht, da Anlagenteile meist gleichzeitig modernisiert oder erneuert werden und durch die höhere Auslastung einer Station das Ausfallrisiko dieser Komponente steigt.\\
+			
+			Aus diesem Grund wurde entschieden, die Anlagen zufällig an eine der verfügbaren Bearbeitungsstationen zu verteilen. Hieraus ergab sich jedoch das Problem, dass unter normalen Umständen Anlagensteuerung exakt arbeiten, da zufällige Ergebnisse innerhalb der Produktion unerwünscht sind. Dies bedeutet das eine \ac{SPS} keinen eingebauten Pseudozufallsgeneratoren zur Verfügung stellen und dieser somit implementiert werden muss. Zur Generierung von Zufallszahlen wurde hier Prozessorzeit verwendet welche durch eine Modulo-Operation mit der Anzahl der zur Auswahl stehenden Bearbeitungsstationen eine für diese Bedürfnisse ausreichende Gleichverteilung der Stationen erreicht.
 		
 		\subsection{Simulation der Bearbeitungszeit}
+		
+			Hat ein Fahrzeug die Bearbeitungsstation am Ende der zugewiesenen Teilroute erreicht, ist es aus Simulationssicht sinnvoll zunächst ein bestimmtes Zeitintervall zu warten, bevor die nächste Teilroute ausgeführt wird. Hierdurch wird der Bearbeitungsvorgang innerhalb einer Bearbeitungsstation simuliert. Zur Implementierung dieser Funktion wird innerhalb der Wegfindungsschicht bei Erkennen des erreichten Endes einer Teilroute ein Timer gestartet, der nach 3 Sekunden einen Impuls von einer Periode erzeugt. Dieser Impuls wird verwendet um die Ausführung der nächsten Teilroute zu starten. Da die Zuweisung von Bearbeitungsstationen wie in Abschnitt \ref{Zuweisung_Station} beschrieben nicht von dem Belegungsstatus der nächsten Zielstation abhängt, kann die Berechnung der nächsten Teilroute bereits während der Simulation des Bearbeitungszustands durchgeführt werden. Durch gerichtete Verbindungen an den Ausgängen der Maschinenplätze ist zudem gewährleistet, das auf der ersten Teilstrecke kein Fahrzeug entgegen kommen kann.
 	
 		
 	\section{Beispiel für eine einfache Routenberechnung}
+	
+		Das nachfolgende Beispiel zeigt graphisch die Abarbeitung eines einfachen Rezepts mit der Funktionalitätsreihenfolge $(2,1)$. Die Funktionalität 2 wird im vorliegenden Beispiel von den Knoten X und Y bereitgestellt, bei der Funktion 1 handelt es sich um den Ausgang an Knoten 24. Die Funktionalität 0 ist immer den Eingängen zugeordnet, Funktionalität 1 beschreibt analog immer die Ausgänge der Anlage. Es wird angenommen das während der Abarbeitung des Rezepts weder permanente noch temporäre Blockaden auftreten:\\
+		\textbf{insert multiple graphics showcasing pathfinding without dynamic reactions here.}

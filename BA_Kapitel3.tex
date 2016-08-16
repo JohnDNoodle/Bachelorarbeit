@@ -1,5 +1,5 @@
 \chapter{Theoretische Grundlagen Wegfindung}
-
+	\label{Theorie}
 \section{Modellierung der Anlagentopologie}
 	\label{Graph_Anlage}
 	Zur Berechnung eines Weges innerhalb der Anlage wird zuallererst die Topologie der besagten Anlage benötigt. Für die Funktionsweise der \ac{FTF} wurde definiert, das sich alle Fahrzeuge mittels optischer Merkmale auf einer definierten Teilstrecke bewegen. Zudem soll es den Fahrzeugen nur an festgelegten Entscheidungspunkten möglich sein, ihren Fahrzustand zu ändern und eine andere Teilstrecke. Dies bedeutet, das alle Fahrzeuge, sobald sie sich für eine Teilstrecke entschieden haben, dieser bis zum nächsten Entscheidungspunkt folgen. Auf Basis einer solchen logischen Unterteilung der Anlage in Entscheidungspunkte und Teilstrecken als Verbindungen zwischen zwei solcher Punkte, liegt es nahe als Datenstruktur für die Modellierung der Anlagentopologie einen Graphen zu verwenden. Die Entscheidungspunkte entsprechen hierbei den Knoten und die korrespondierenden Teilwegstrecken stellen die Kanten des Graphen dar. Da sich die \ac{FTF} möglichst frei durch die Produktion bewegen sollen, wird als Grundform der Anlage ein ungerichteter Graph zur Abbildung der Topologie verwendet, jedoch soll es für die spätere Wegberechnung unerheblich sein, ob es sich um einen gerichteten oder ungerichteten Graphen handelt.\\
@@ -162,6 +162,7 @@
 
 	
 	\subsection{Berechnungsaufwand}
+		\label{Aufwand_A*}
 		Der Berechnungsaufwand für den A*-Algorithmus lässt sich nur schwer festlegen, da wie in \ref{Heuristik} beschrieben, die Berechnung des kürzesten Pfads sehr stark von der Heuristik abhängt. Unter der Annahme, dass auch wirklich der kürzeste Pfad gefunden wird, muss für die Heuristik gelten:
 		\begin{equation} \label{eq:Heuristikbedingung}
 			0\le \hat{h}(n)\le h(n)
