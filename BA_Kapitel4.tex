@@ -1,5 +1,5 @@
 \chapter{Technische Implementierung der Algorithmen}
-
+	\label{Implementierung}
 	\section{Kurze Einführung in die Programmiersprache und Programmierumgebung}
 	
 		Für die Implementierung der Wegfindung wurde im Kapitel \ref{Aufgabenstellung_Pathfinding} definiert, dass diese auf einer Siemens \ac{SPS} (englisch: \ac{PLC})  der S7-1200er Reihe lauffähig ist. Bei der 1200er Reihe handelt es sich um  Steuerungen des niedrigen Leistungssegments. Für die Projektierung und Programmierung von Anlagen mit Steuerungen dieser Art wird deine proprietäre Entwicklungsumgebung namens \ac{TIA-Portal} von Siemens zur Verfügung gestellt.
@@ -176,7 +176,7 @@
 		Die Wegfindung innerhalb der Anlage besteht nicht allein aus der Berechnung von kürzesten Pfaden zwischen zwei Anlagenknoten. Sie muss unter anderem auch wissen, welcher Bearbeitungsschritt als nächstes ausgeführt werden soll und welcher Anlagenknoten die korrespondierende Funktionalität besitzt. Zudem soll es möglich sein, dass mehrere Bearbeitungsstationen die gleiche Funktionalität bereitstellen. In diesem Fall muss eine geeignete Station ausgewählt und der Weg zu dem entsprechenden Knoten berechnet werden können.
 	
 		\subsection{Bearbeitungsreihenfolge}
-		
+			\label{Bearbeitungsreihenfolge}
 			Im Abschnitt \ref{Aufgabenstellung_Pathfinding} definiert, dass das Fahrzeug selbst die Ablaufreihenfolge der Bearbeitungsschritte kennt. Diese Anforderung wurde durch die Implementierung des Datentyps "`Assignment"' realisiert. Dieser Datentyp stellt eine Art Rezept dar, indem gespeichert ist, welche Funktionalitäten ein bestimmtes Werkstück benötigt\footnote{Anlagenein- und Ausgänge sind auch Funktionalitäten, die erfasst werden.}. Er ist zusammengesetzt aus der Anzahl der benötigten Funktionalitäten sowie einer Liste der zugehörigen FunktionalitätsIDs. Hierfür muss jedoch zunächst definiert sein, welche Funktionalitäten in der Anlage zur Verfügung gestellt werden und wie die Knoten lauten, die diese Funktionalität bereitstellen. Für diese Aufgabe wurde ein Datentyp definiert, welcher wie folgt aufgebaut ist:
 			
 			\begin{longtable}{| l | l |}
