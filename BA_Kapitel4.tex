@@ -1,5 +1,5 @@
 \chapter{Technische Implementierung der Algorithmen}
-
+	\label{Implementierung}
 	\section{Kurze Einführung in die Programmiersprache und Programmierumgebung}
 	
 		Für die Implementierung der Wegfindung wurde im Kapitel \ref{Aufgabenstellung_Pathfinding} definiert, dass diese auf einer Siemens \ac{SPS} (englisch: \ac{PLC})  der S7-1200er Reihe lauffähig ist. Bei der 1200er Reihe handelt es sich um  Steuerungen des niedrigen Leistungssegments. Für die Projektierung und Programmierung von Anlagen mit Steuerungen dieser Art wird deine proprietäre Entwicklungsumgebung namens \ac{TIA-Portal} von Siemens zur Verfügung gestellt.
@@ -86,7 +86,7 @@
 		Die in Kapitel \ref{Theorie} beschriebenen Algorithmen wurden beide auf ähnliche Weise in \ac{STEP7} implementiert. Für die A* und Dijkstra wurden jeweils geeignete Datentypen definiert, welche an die Anforderungen der Algorithmen angepasst wurden. Die Implementierung verwendet hier in beiden Fällen eine Priority-Queue auf Basis eines Arrays, um bei der Berechnung den jeweils nächsten besten Knoten zu identifizieren. Das Array als Grundlage der Prioritätsschlange wurde hier gewählt, da sich die Realisierung in \ac{STEP7} einfacher gestaltet als beispielsweise eines Heaps. Dafür müssen hier Abstriche bei der Sortiergeschwindigkeit gemacht werden.
 		
 		\subsection{Berechnungsdatentypen}
-			
+			\label{Datentypen_Berechnung}
 			Für die Berechnung der Algorithmen wurden Datentypen erstellt, die alle für den Algorithmus benötigten Informationen enthalten. Die Datentypen beschreiben die Knoten einzeln und werden zur Berechnung in eine Priority-Queue eingefügt. Als Ergebnis der Berechnung wird eine geordnete Liste der Einzelknoten ausgegeben. Die Datentypen enthalten folgende Grunddaten:
 			
 			\begin{longtable}{| l | l |}
@@ -140,6 +140,14 @@
 			
 			Die Erkennung von permanenten Blockaden wurde durch eine Matrix realisiert, da hier, wie auch bei der Adjazenzmatrix, in konstanter Zeit geprüft werden kann ob auf dem betrachteten Streckenabschnitt Behinderungen vorliegen. Diese permanenten Blockaden liegen über längere Zeitintervalle vor und können deshalb bereits zu Beginn der Routenberechnung berücksichtigt werden. Dies ist bei temporären Blockaden durch andere Fahrzeuge nicht der Fall, weshalb zur Erkennung dieser Art von Behinderungen ein anderer Mechanismus zur Anwendung kommt, der in Abschnitt \ref{Kollisionsvermeidung} näher beschrieben wird.
 			
+		\subsection{Generation der Route}
+			\label{Routengeneration}
+			Der A*-Algorithmus liefert als Ergebnis eine Liste mit allen geschlossenen Knoten. Aus dieser Liste muss nach Beendigung des Algorithmus eine Route generiert werden, die in für die Fahrzeugsteuerung vertändlicher Form vorliegt. Da die Fahrzeugsteuerungsschicht ebenso wie die Wegfindung über die Knotenliste der Anlagentopologie verfügt\footnote{wobei für die Fahrzeugsteuerung nur die Verbindungen eines Knotens und nicht die Kantenlängen von  Bedeutung sind.}, genügt es nur eine Liste der KnotenIDs der Knoten des errechneten kürzesten Pfades zu übertragen.
+			\\
+			Es besteht jedoch das Problem, dass in der Liste der geschlossenen Knoten, auch solche vorkommen können, die nicht Teil des kürzesten Weges sind. Dies ist vor allem dann der Fall, wenn sich die Anlage zwischenzeitlich geändert hat. Würden hier nur die IDs aller Knoten der Liste übertragen, würde dies zu ungültigen Routen für die Fahrteuerung führen, obwohl der Algorithmus einen validen Weg ermittelt hat. Dies ist der Grund, warum die in Abschnitt \ref{label} vorgestellten Datentypen über die Komponente "`ParentID"' verfügen. Diese hilft bei der Rückverfolgung  des Pfades vom Ziel aus bis zum Startknoten. Um somit eine Route zu generieren, muss zunächst der Zielknoten gefunden werden und dann anhand der ParentIDs der Pfad zum Start einzeln nachverfolgt werden. Der Zielknoten selbst kann einfach gefunden werden, da er der mit großer Wahrscheinlichkeit der letzte geschlossene Knoten der Knotenliste ist, da das Erreichen des Ziels eine der Abbruchbedingungen des Algorithmus ist. Die andere Bedingung ist, das keine weiteren Knoten in der Liste der offenen Knoten vorhanden sind. In diesem Fall existiert aber kein Weg vom Start- zum Zielknoten und die Generation der Route ist hinfällig.
+			\\
+			Da die Reihenfolge beim Parsen der Knoten jedoch invers zur für die Fahrzeugsteuerung benötigten Reihenfolge der Route ist, werden die zum kürzesten Weg gehörenden Knoten temporär in einer Liste abgespeichert, aus der dann durch Umkehrung die eigentliche Route erzeugt wird. Nachdem nun der Zielknoten gefunden wurde, muss mittels der ParentID der vorletzte Knoten der Route gefunden werden. Um nicht auf der Suche nach einem Knoten bei jedem Suchdurchlauf die komplette Knotenliste durchsuchen zu müssen, kann davon ausgegangen werden, dass sich der Vorgängerknoten eines Pfadknotens an einer Stelle in der Liste der geschlossenen Punkte befindet, die vor dem  Index des Pfadknotens liegt. Dies lässt sich gemäß Abschnitt \ref{Dijkstra_Alg} aus der Bedingung für geschlossene Knoten folgern, die bei einer unterschätzenden Heuristik bei A* zur Gruppe A gehören. Zudem ist es sinnvoll in absteigender Reihenfolge nach dem Vorgängerknoten zu suchen, da dieser wahrscheinlicher in der Nähe des Pfadknotens zu finden ist als beim Startknoten. Somit kann der Aufwand der Routengeneration auf $\mathcal{O}(n)\le \mathcal{O}(Route)\ll \mathcal{O}(n^2)$ beschränkt werden.
+			
 			
 	\section{Einhaltung der Echtzeitbedingung}
 		
@@ -168,7 +176,7 @@
 		Die Wegfindung innerhalb der Anlage besteht nicht allein aus der Berechnung von kürzesten Pfaden zwischen zwei Anlagenknoten. Sie muss unter anderem auch wissen, welcher Bearbeitungsschritt als nächstes ausgeführt werden soll und welcher Anlagenknoten die korrespondierende Funktionalität besitzt. Zudem soll es möglich sein, dass mehrere Bearbeitungsstationen die gleiche Funktionalität bereitstellen. In diesem Fall muss eine geeignete Station ausgewählt und der Weg zu dem entsprechenden Knoten berechnet werden können.
 	
 		\subsection{Bearbeitungsreihenfolge}
-		
+			\label{Bearbeitungsreihenfolge}
 			Im Abschnitt \ref{Aufgabenstellung_Pathfinding} definiert, dass das Fahrzeug selbst die Ablaufreihenfolge der Bearbeitungsschritte kennt. Diese Anforderung wurde durch die Implementierung des Datentyps "`Assignment"' realisiert. Dieser Datentyp stellt eine Art Rezept dar, indem gespeichert ist, welche Funktionalitäten ein bestimmtes Werkstück benötigt\footnote{Anlagenein- und Ausgänge sind auch Funktionalitäten, die erfasst werden.}. Er ist zusammengesetzt aus der Anzahl der benötigten Funktionalitäten sowie einer Liste der zugehörigen FunktionalitätsIDs. Hierfür muss jedoch zunächst definiert sein, welche Funktionalitäten in der Anlage zur Verfügung gestellt werden und wie die Knoten lauten, die diese Funktionalität bereitstellen. Für diese Aufgabe wurde ein Datentyp definiert, welcher wie folgt aufgebaut ist:
 			
 			\begin{longtable}{| l | l |}
@@ -208,7 +216,7 @@
 			Aus diesem Grund wurde entschieden, die Anlagen zufällig an eine der verfügbaren Bearbeitungsstationen zu verteilen. Hieraus ergab sich jedoch das Problem, dass unter normalen Umständen Anlagensteuerung exakt arbeiten, da zufällige Ergebnisse innerhalb der Produktion unerwünscht sind. Dies bedeutet das eine \ac{SPS} keinen eingebauten Pseudozufallsgeneratoren zur Verfügung stellen und dieser somit implementiert werden muss. Zur Generierung von Zufallszahlen wurde hier Prozessorzeit verwendet welche durch eine Modulo-Operation mit der Anzahl der zur Auswahl stehenden Bearbeitungsstationen eine für diese Bedürfnisse ausreichende Gleichverteilung der Stationen erreicht.
 		
 		\subsection{Simulation der Bearbeitungszeit}
-		
+			\label{Simulation Station}
 			Hat ein Fahrzeug die Bearbeitungsstation am Ende der zugewiesenen Teilroute erreicht, ist es aus Simulationssicht sinnvoll zunächst ein bestimmtes Zeitintervall zu warten, bevor die nächste Teilroute ausgeführt wird. Hierdurch wird der Bearbeitungsvorgang innerhalb einer Bearbeitungsstation simuliert. Zur Implementierung dieser Funktion wird innerhalb der Wegfindungsschicht bei Erkennen des erreichten Endes einer Teilroute ein Timer gestartet, der nach 3 Sekunden einen Impuls von einer Periode erzeugt. Dieser Impuls wird verwendet um die Ausführung der nächsten Teilroute zu starten. Da die Zuweisung von Bearbeitungsstationen wie in Abschnitt \ref{Zuweisung_Station} beschrieben nicht von dem Belegungsstatus der nächsten Zielstation abhängt, kann die Berechnung der nächsten Teilroute bereits während der Simulation des Bearbeitungszustands durchgeführt werden. Durch gerichtete Verbindungen an den Ausgängen der Maschinenplätze ist zudem gewährleistet, das auf der ersten Teilstrecke kein Fahrzeug entgegen kommen kann.
 	
 		
