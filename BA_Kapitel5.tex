@@ -2,18 +2,96 @@
 
 \section{Kommunikation}
 	\label{Kommunikation}
-\subsection{Interne Kommunikation}
-	\label{Interne Kommunikation}
-\subsection{Externe Kommunikation}
+	Eine Grundvoraussetzung für jegliche Art von Dynamik ist das Wissen über die eigene Umgebung. Es ist nicht möglich, dynamisch auf Ereignisse zu reagieren, wenn Daten über die Umgebung seit der initialen Wegberechnung nicht aktualisiert wurden. Aus diesem Grund ist Kommunikation als Mittel der Informationsbeschaffung essentiell. Da das Anwenderprogramm modularisiert und in Schichten aufgeteilt wurde, ist ein Datenaustausch unabdingbar. 
+	\\
+	Da das Projekt von zwei Personen bearbeitet wurde und die Kommunikation zwischen beiden Teilen separat entwickelt wurde, kann die Kommunikationsschicht in zwei getrennte Unterschichten aufgeteilt werden. Jede dieser Teilschichten regelt die Schnittstelle zu der zugehörigen Schicht. Aus diesem Grund wird in folgenden Abschnitt vor allem die Kommunikation aus Sicht der Wegfindung beschrieben. Beide Unterschichten wurden aber aufeinander abgestimmt und sind im Kern identisch und haben nur unterschiedliche Verwendungsarten.
+	\\
+	Wie bereits erwähnt, erfüllt die Kommunikationsschicht vor allem zwei Anforderungen. Die erste Anforderung ist der Datenaustausch zwischen den Schichten des Anwenderprogramms eines einzelnen \ac{FTF}. Da in der vorliegenden Realisierung der Anlage sowohl die Wegfindung als auch die Fahrzeugsteuerung auf der selben Steuerung ausgeführt werden, wurde diese Kommunikationsart als "`Interne Kommunikation"' bezeichnet. Im Gegensatz hierzu wurde der Austausch von Informationen zwischen anderen Fahrzeugen "`Externe Kommunikation"' genannt. Es ist grundsätzlich möglich, beide Arten der Kommunikation gemeinsam zu implementieren. Da aber für den Datenaustausch innerhalb der \ac{SPS} das Netz nicht unnötig belastet werden muss, wurde entschieden die beiden Arten von Kommunikation aufzutrennen. Dies hat den weiteren Vorteil das die Daten schneller für die jeweils andere Schicht verfügbar sind, als dies beispielsweise über eine drahtlose Verbindung der Fall wäre.\textbf{insert Schichten graphic here}
+	
+	\subsection{Schnittstelle zur Kommunikationsschicht}
+		
+		Beide Arten der Kommunikation besitzen die selbe strukturellen Anbindung an die zugehörige Programmschicht. Für die ein- und ausgehende Kommunikation existiert jeweils ein Schnittstellen-\ac{DB}. Beide \ac{DB}s besitzen den folgenden grundsätzlichen Aufbau:
+		
+		\begin{itemize}
+			\item Speicherplatz für Daten zur internen Kommunikation.
+			\item Speicherplatz für Daten zur externen Kommunikation.
+			\item Signalisierungsbits zum Erkennen oder Anstoßen der Kommunikation.
+		\end{itemize}
+		
+		Am Beispiel der Wegfindungsschicht wird besteht der Schnittstellen-\ac{DB} für die ausgehende Kommunikation aus einem Datentyp für die in Abschnitt \ref{Routengeneration} beschriebenen Routeninformationen für den internen Datenaustausch, sowie einem Byte-Array konstanter Größe für die externe Kommunikation mit anderen Fahrzeugen. Da die Wegfindung  als einzigen Partner einer Ausgehenden Verbindung jedoch die korrespondierende Fahrzeugsteuerung  besitzt, wird das Byte-Array bei der Implementierung aller Schichten auf der gleichen Steuerung nicht benötigt. Das vorhandene Signalisierungsbit gibt eine Sendeanforderung für die Route aus der Wegfindungsschicht an die Kommunikationsunterschicht weiter.  Die entsprechenden Bausteine reagieren auf diese Anforderung und stoßen die Übertragung an. \textbf{insert graphic of DB here}.
+		\\
+		Der Schnittstellen-DB für die eingehende Kommunikation besitzt analog zum Ausgehenden zwei Datenbereiche für interne und externe Kommunikation, wobei hier beide als Byte-Arrays realisiert sind. Im Unterschied zum vorherigen \ac{DB} enthält dieser zwei getrennte Signalisierungsmerker für intern und extern erhaltene Daten.
+		
+	\subsection{Interne Kommunikation}
+		\label{Interne Kommunikation}
+		Die Interne Kommunikation besteht aus Sicht der Wegfindung vor allem aus dem Empfangen von Positionsdaten der zugeordneten Fahrzeugsteuerung und Senden der berechneten Routen an Selbige. Die Fahrzeugsteuerung erkennt durch den vorgelagerten RFID-Sensor den voraus liegenden Knoten und teilt diesen der Wegfindung mit. Da sich beide Schichten auf der gleichen Steuerung befinden besteht hier die interne Kommunikation der Einfachheit halber nur aus dem Kopieren der Positionsdaten aus dem ausgehenden Schnittstellen-\ac{DB} der Fahrzeugsteuerung in den entsprechenden Speicherplatz im eingehenden \ac{DB} der Wegfindungsschicht. Um die Wegfindungsschicht über die neuen Daten in Kenntnis zu setzen wird das  interne Signalisierungsbit im eingehenden Schnittstellen-\ac{DB} der Wegfindung einen Zyklus lang gesetzt.
+		\\
+		Die Positionsdaten sind haben den folgenden Aufbau:
+		
+		\begin{tabular}{| c | l |}
+			\hline
+			\textbf{Arrayindex} & \textbf{Bedeutung} \\ \hline \hline
+			1 & ID des sendenden Fahrzeugs. \\ \hline
+			2 & ID des erkannten aktuellen (RFID-)Knotens. \\ \hline
+			3 & ID des nächsten Knotens entlang der aktuellen Route. \\
+			\hline
+		\end{tabular}\\
+		
+		Die ID des sendenden Fahrzeugs wird für die interne Kommunikation nur dann benötigt, wenn sich die Wegfindung nicht auf der selben Steuerung wie die Fahrzeugsteuerung befindet. Durch die ID des aktuellen Knotens wird die bevorstehende Kreuzung identifiziert. Anhand des Knotens an Index 3, zu dem an der bevorstehenden Kreuzung nach der derzeitigen Route abgebogen wird, kann die Teilstrecke\footnote{Verbindungskante zwischen aktuellem und nächstem Knoten.} bestimmt werden die das \ac{FTF} voraussichtlich als nächstes befahren wird. Diese Angabe ist vor allem für die Kollisionsvermeidung in Abschnitt \ref{Kollisionsvermeidung} von Bedeutung. Stimmen die beiden KnotenIDs der Positionsdaten überein, so bedeutet dies, dass der Zielknoten einer Teilroute erreicht wurde. Gemäß Abschnitt \ref{Simulation Station} wird hiermit die Simulation der Bearbeitungsdauer gestartet und die Berechnung der nächsten Teilroute angestoßen.
+		\\
+		Um eine berechnete Teilroute an die Fahrzeugsteuerung zu übersenden, wird diese zunächst im ausgehenden Schnittstellen-\ac{DB} abgelegt. Durch Setzen des Signalmerkers wird ein Kopiervorgang, analog zu dem beim Erhalten der Positionsdaten, gestartet und nach Abschluss der Übertragung das Signalisierungsbit des eingehenden Schnittstellen-{DB}s der Fahrzeugsteuerung gesetzt. Dies signalisiert, dass  dem Fahrzeug eine neue Teilroute zur Verfügung gestellt wurde.
+				
+	\subsection{Externe Kommunikation}
+	
+		Mittels der externen Kommunikation, werden die eigenen Positionsdaten den anderen Fahrzeugen in der gleichen Anlage mitgeteilt. Da die Übermittlung von Positionsdaten die Aufgabe der Fahrzeugsteuerung ist, werden von der Wegfindungsschicht nur Daten empfangen und keine versandt. Da die Fahrzeuge mobil sein müssen, wurde zur Datenübertragung an andere Fahrzeuge eine drahtlose Verbindung ausgewählt. Hierfür verfügt jedes \ac{FTF} über sein eigenes \acs{WLAN}-Client-Modul. Als Übertragungsprotokoll wurde das \ac{UDP} gewählt, da im Rahmen dieses Protokolls ungerichtete Verbindungen aufgebaut werden können. Dies hat den Vorteil, das mittels einer ungerichteten Verbindung die Broadcast-Adresse des Netzwerksegments als Verbindungspartner projektiert werden kann.
+		\\
+		Diese Broadcast-Adresse ist eine reservierte Spezialadresse innerhalb eines Subnetzes, welche die Eigenschaft hat, das sie von allen Teilnehmern im gleichen Netzwerkabschnitt empfangen und ausgewertet wird. Diese Eigenschaft wird im vorliegenden Fall ausgenutzt, um Informationen an alle Netzwerkteilnehmer weiter zu leiten, ohne die spezifischen Netzwerkadressen der Teilnehmer kennen zu müssen. Dies hat den Vorteil, dass es gleich ist, welche anderen \ac{FTF} sich zu einem bestimmten Zeitpunkt in der Anlage befinden. Solange die Fahrzeuge mit dem gleichen Netzsegment verbunden sind, können sie Daten von anderen Fahrzeugen empfangen und eigene Positionsdaten senden. Das gleiche gilt auch für Überwachungs- und Visualisierungssysteme, die einfach in das gleiche Subnetz eingehängt werden können um den Netzverkehr abzuhören, ohne den Betrieb der Anlage zu behindern.
+		\\
+		\textbf{insert network graphic here}
+		
+	\subsection{Vorteile der Modularität}
+		
+		Der modulare Aufbau des Anwenderprogramms hat nicht nur den Vorteil, dass die Wegfindungsschicht auf eine zentrale Steuereinheit ausgelagert werden kann. Vor allem bei der Kommunikation können durch die Modularisierung verschiedene Kommunikationsarten einfach und schnell gegeneinander ausgetauscht werden. Im Verlauf der Entwicklung des Anlagenmodells wurden verschiedene Übertragungsarten auf ihre Vor- und Nachteile hin untersucht.
+		Folgende Kommunikationsmöglichkeiten wurden getestet:
+		
+		\begin{itemize}
+			\item \textbf{\ac{UDP}:} 
+				\begin{itemize}
+					\item \textbf{Vorteil}: Gleichzeitige Adressierung aller Fahrzeuge ohne Wissen derer Adressen möglich.
+					\item \textbf{Nachteil}: Ungerichtete Verbindung gibt keine Informationen über den Erhalt der Daten zurück.
+				\end{itemize}
+			\item \textbf{\acs{TCP}:}
+				\begin{itemize}
+					\item \textbf{Vorteil}: Durch Verbindungsüberwachung werden Daten bei Verlust automatisch neu versendet. Geeignet für gesicherte Übertragung von Routen.
+					\item \textbf{Nachteil}: Eigene dedizierte Verbindung nötig zu jedem anderen Netzteilnehmer. Auf den kleinen S7-1200er Steuerungen aufgrund der auf acht beschränkten Anzahl gleichzeitige programmierter Verbindungen\cite{S7-1200} nur begrenzt einsetzbar.
+				\end{itemize}
+			\item \textbf{\ac{UDP}-Broadcast Master-Slave:}
+				\begin{itemize}
+					\item \textbf{Vorteil}: Erreichbare Teilnehmer werden detektiert erfolgreiche Übertragung wird bestätigt.
+					\item \textbf{Nachteil}: Nur die Masterstation kann senden. Wechseln des Masters dauert mit zirka 200ms verhältnismäßig lange und ist deshalb nur für wenige Teilnehmer realisierbar. 
+				\end{itemize}
+			\item \textbf{Internes Kopieren:}
+			\begin{itemize}
+				\item \textbf{Vorteil}: Schnelles, fehlersicheres Verfahren.
+				\item \textbf{Nachteil}: Nur für Kommunikation auf gleicher Steuerung einsetzbar.
+			\end{itemize}
+		\end{itemize}
+		
+		Durch die Unabhängigkeit der Schichten kann die Funktionalität der Modellanlage innerhalb gewisser Grenzen an die gegebenen Anforderungen angepasst werden, ohne die Funktionalität anderer Schichten zu beeinträchtigen.
 
 \section{Algorithmische Kollisionsvermeidung}
 	\label{Kollisionsvermeidung}
-\cite{Silver2005}
-\\
-\cite{Zelinsky1992}rausnehmen falls originaltext nicht beschaffbar ist bis dahin
+	Wenn sich mehrere \ac{FTF} zur gleichen Zeit in der Anlage befinden, muss für eine funktionierende Anlage verhindert werden, das sich die Wege dieser Fahrzeuge kreuzen. Da die Fahrzeugsteuerung nur an Knotenpunkten ihre Richtung ändern kann muss somit verhindert werden, dass zwei Fahrzeuge zeitgleich den selben Streckenabschnitt befahren. 
+	
+	\subsection{Generelle Vorgehensweise bei Kooperativen Wegfindungsalgorithmen}
+	
+		
+		\cite{Silver2005}
+		\\
+		\cite{Zelinsky1992}rausnehmen falls Originaltext nicht beschaffbar ist bis dahin
 
-\subsection{Problem des Zeitlichen Indeterminismus}
-
-\cite{Erdmann1986}
-\subsection{Verhinderung von Deadlock-Situationen}
+	\subsection{Problem des Zeitlichen Indeterminismus}
+	
+	\cite{Erdmann1986}
+	\subsection{Verhinderung von Deadlock-Situationen}
 
