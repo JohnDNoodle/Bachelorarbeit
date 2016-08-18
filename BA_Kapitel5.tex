@@ -115,7 +115,7 @@
 		\\ \textbf{insert graphic recalculate route here}
 	
 	\subsection{Kommunikation verifizierter Teilstrecken}
-		
+		\label{Anpassung Kommunikation}
 		Die Möglichkeit, das sich die als nächstes geplante Teilstrecke bei dem Erreichen eines Knotens ändern kann, hat zur Folge, dass auch die externe Kommunikation mit anderen Fahrzeugen modifiziert werden muss. Es kann nicht länger bei Erkennung einer Kreuzung durch den \ac{RFID}-Sensor parallel die Positionsdaten mit der geplanten Teilstrecke an die Wegfindungsschicht und anderen Fahrzeuge weitergeleitet werden. Dies würde dazu führen das nach einer notwendigen Neuberechnung durch die Wegfindung das Fahrzeug nicht mehr die vorher publik gemachte Teilstrecke befährt, sondern eine andere Verbindungsstrecke auf der neuen Route belegt. Dadurch würden entgegenkommende Fahrzeuge wissen, das diese Strecke eigentlich bereits belegt ist.
 		\\
 		Eine Möglichkeit ist, bei einer Änderung der geplanten Route die aktualisierten Positionsdaten erneut zu senden. Dies erhöht aber die Kommunikationslast und ist deshalb nur begrenzt sinnvoll. Als Lösung wurde interne von der externen Kommunikation getrennt und zeitlich gestaffelt. Das aktualisierte Kommunikationsmodell sieht vor, das bei der Erkennung des Knotens zunächst nur die Wegfindung die geplante nächste Teilstrecke erhält. Diese verififiziert die Route und sendet in jedem Fall eine aktualisierte Route an die Fahrzeugsteuerung zurück. Diese besteht entweder aus dem Teil der noch gültigen Route, der vom aktuellen Knoten zum Zielknoten führt, oder aus der neu berechneten Ausweichroute. \textbf{insert graphics for both options here.}
