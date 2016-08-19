@@ -99,7 +99,7 @@
 			\hat{h}(n)\le h(n).
 		\end{equation}
 		
-		Dies hat zur Folge, dass der kürzeste Pfad von $s$ nach $z$ unter verwendung einer solchen Heuristik $\hat{h}(n)$ bei Beendigung des Algorithmus nur aus Knoten der Klasse A besteht, also keine anderer Pfad existiert, der kürzer ist als der gefundene.
+		Dies hat zur Folge, dass der kürzeste Pfad von $s$ nach $z$ unter Verwendung einer solchen Heuristik $\hat{h}(n)$ bei Beendigung des Algorithmus nur aus Knoten der Klasse A besteht, also keine anderer Pfad existiert, der kürzer ist als der gefundene. Durch Speicherung des jeweiligen Vorgängers des aktuellen Knotens kann nach Beendigung der Algorithmen der kürzeste Pfad konstruiert werden. 
 		\\
 		Der Dijkstra-Algorithmus stellt hier den Standardfall dar, bei dem $\hat{h}(n)=0$ angenommen wird. Im Bezug auf A* werden unterschiedliche Werte für die Heuristik in Abschnitt \ref{Heuristik} näher betrachtet.
 	
@@ -130,42 +130,53 @@
 		Der Berechnungsaufwand des Dijkstra-Algorithmus beträgt in Landau-Notation vereinfacht $\mathcal{O}(\lvert \mathcal{V}\rvert ^2)$, beziehungsweise $\mathcal{O}(\lvert \mathcal{V}\rvert  \log \lvert \mathcal{V}\rvert + \lvert \mathcal{E}\rvert) $ bei der Implementierung mittels Fibonacci-Heaps \cite{Fredman1984}, wobei  $\lvert \mathcal{V}\rvert$ gleich der Anzahl der Knoten  und $\lvert \mathcal{E}\rvert$ gleich der Anzahl der Kanten des Graphen ist. Diese Vereinfachung gilt jedoch nur, wenn die Anzahl der Kanten in der gleichen Größenordnung liegt wie die Anzahl der Knoten, also beispielsweise nicht für vollständige graphen, für die gilt $\lvert \mathcal{E}\rvert =\mathcal{O}(\lvert \mathcal{V}\rvert ^2)$.
 	
 \section{A*-Algorithmus}
-	Der zweite verwendete Algorithmus für die Wegfindung ist der sogenannte A*-Algorithmus. Dieser ist eine Weiterentwicklung des in \ref{Dijkstra_Alg} vorgestellten Dijkstra-Algorithmus. Der grundlegende Unterschied ist jedoch, das bei A* eine Bewertung der Betrachtungsreihenfolge von Knoten bei der Berechnung verwendet werden. Dies bedeutet, dass diejenigen Knoten und Kanten zuerst expandiert werden sollen, bei denen die Wahrscheinlichkeit höher ist, das sie Teil des kürzesten Pfades zum Zielknoten sind. Im Vergleich dazu wurde beim Dijkstra-Algorithmus immer genau der Knoten aus B als nächstes expandiert, der den kürzesten Abstand zu deStartknoten hatte\textbf{Insert graphic dijkstra vs A*}. Um eine Abschätzung der Wahrscheinlichkeit eines Knotens bezüglich seiner Zugehörigkeit zu dem  kürzesten Pfad vom Start zum Zielknoten treffen zu können, werden somit zusätzliche Informationen über die Beziehung zwischen einzelnen Knoten und dem Zielknoten benötigt. Diese Bewertung von Knoten wird auch als Heuristik bezeichnet. Mittels dieser Bewertung kann nun bereits vor Erreichen des Zielknotens eine Aussage über die Länge der Route gemacht werden.
+	Der zweite verwendete Algorithmus für die Wegfindung ist der sogenannte A*-Algorithmus. Dieser ist eine Weiterentwicklung des in \ref{Dijkstra_Alg} vorgestellten Dijkstra-Algorithmus. Der grundlegende Unterschied ist jedoch, dass bei A* eine andere Bewertung der Betrachtungsreihenfolge von Knoten bei der Berechnung verwendet werden. Dies bedeutet, dass diejenigen Knoten und Kanten zuerst expandiert werden sollen, bei denen die Wahrscheinlichkeit höher ist, das sie Teil des kürzesten Pfades zum Zielknoten sind. Im Vergleich dazu wurde beim Dijkstra-Algorithmus immer genau der Knoten aus B als nächstes expandiert, der den kürzesten Abstand zu dem Startknoten hatte\textbf{Insert graphic dijkstra vs A*}. Um eine Abschätzung der Wahrscheinlichkeit eines Knotens bezüglich seiner Zugehörigkeit zu dem  kürzesten Pfad vom Start zum Zielknoten treffen zu können, werden somit zusätzliche Informationen über die Beziehung zwischen einzelnen Knoten und dem Zielknoten benötigt. Diese Bewertung von Knoten ist die im Abschnitt \ref{Abschaetz} vorgestellte Heuristik bezeichnet. Mittels dieser Bewertung kann nun bereits vor Erreichen des Zielknotens eine Aussage über die Länge der Route gemacht werden. 
 	
 	\subsection{Grundprinzip}
 		\label{A*-Alg}
-		Die Funktionsweise des A*-Algorithmus kann somit wie folgt als Erweiterung des Dijkstra-Algorithmus beschrieben werden\cite{Hart1968}:
+		Die Funktionsweise des A*-Algorithmus kann somit als Erweiterung des Dijkstra-Algorithmus beschrieben werden \cite{Hart1968}. Unter Verwendung der in Abschnitt \ref{Abschaetz} definierten Entscheidungsfunktion kann wie folgt verfahren werden:
+		
+		\begin{itemize}
+			 \item 	$s$, $z$ und $n$ sind Knoten eines Graphen. Es soll der kürzeste Pfad von $s$ nach $z$ ermittelt werden. 
+			
+		\end{itemize}
+		
 		\begin{center}
+			
 			\begin{minipage}{0.8\linewidth}
 				
-		
+				
 				\begin{enumerate}
 					\item Man markiere $s$ als "`offen"' und berechne $f(s)$.
-					\item Man wähle denjenigen offenen Knoten $n$ aus, der den  kleinsten Wert für $f(n)$ besitzt.
-					\item Falls $n=z$, wird $n$ als "`geschlossen"' markiert und beende den Algorithmus.
-					\item Andernfalls markiere man $n$ als "`geschlossen"' und füge alle von $n$ erreichbaren Knoten $n'$ zur Liste der offenen Knoten hinzu, die noch nicht als geschlossen markiert wurden und berechne $f(n')$. 	Man springe zurück zu Schritt 2.
+					\item Man wähle für $n$ denjenigen Knoten aus der Open-List aus, der den  kleinsten Wert für $f(n)$ besitzt.
+					\item Falls $n=z$, wird $n$ als "`geschlossen"' markiert und der Algorithmus beendet.
+					\item Andernfalls markiere man $n$ als "`geschlossen"' und füge alle von $n$ über maximal eine Kante erreichbaren Knoten $n'$ zur Liste der offenen Knoten hinzu, die noch nicht als geschlossen markiert wurden und berechne $f(n')$. 	Man springe zurück zu Schritt 2.
 				\end{enumerate}
 			\end{minipage}
 		\end{center}
 		
-		Man sieht das somit bei dem A*-Algorithmus diejenigen Knoten bevorzugt betrachtet werden, die durch die Abschätzungsfunktion als "`wahrscheinlicher zum Ziel führend"' bewertet wurden. Somit ist es nur sinnvoll diesen Bewertungsvorgang näher zu betrachten. 
+		Anhand dieser Vorgehensweise ist zu erkennen, dass bei dem A*-Algorithmus diejenigen Knoten bevorzugt betrachtet werden, die durch die Entscheidungsfunktion als "`wahrscheinlicher zum Ziel führend"' bewertet wurden, da anders als bei Dijkstra $\hat{h}(n)$ bei der Berechnung von $f(n)$ einen Einfluss auf das Ergebnis hat. Somit ist es sinnvoll diesen Bewertungsvorgang näher zu betrachten. 
 		
 	\subsection{Vergleich verschiedener Heuristiken h(n)}
 		\label{Heuristik}
-		Die in Kapitel \ref{Abschaetz} besprochene Abschätzungsfunktion $f(n)$ hat einen großen Einfluss auf das Verhalten des A*-Algorithmus.
-		Zur Veranschaulichung sollen einige Möglichkeiten für die Heuristiken betrachtet werden\cite{Patel2016}:
+		Die in Kapitel \ref{Abschaetz} besprochene Entscheidungsfunktion $f(n)$ und diesbezüglich vor allem auch der Wert von $\hat{h}(n)$ haben einen großen Einfluss auf das Verhalten des A*-Algorithmus.
+		Zur Veranschaulichung sollen einige Möglichkeiten für diese Heuristik betrachtet werden \cite{Patel2016}:
 		\begin{enumerate}
-			\item \textbf{$\hat{h}(n)=0$:} Wenn der Wert der Heuristik konstant auf Null gesetzt wird, so ist dies gleich zu setzen damit, als würden keine Zusatzinformationen zur Berechnung der Route verwendet. Dies bedeutet das immer genau der Knoten aus der Menge von offenen Punkten ausgewählt wird, dessen Abstand zu einem der geschlossenen Knoten am kleinsten ist. Der kürzeste gefundene Pfad durch einen Zwischenknoten $n$ hat zu jedem Zeitpunkt $i$ immer $f(n)=g_i(n)$. Somit entspricht der A*-Algorithmus ohne zusätzliche Informationen genau dem Dijkstra-Algorithmus aus \ref{Dijkstra_Alg}.
-			\item \textbf{$\hat{h}(n)<h(n)$:} Wenn der Abstand eines Knotens $n$ zum Ziel immer unterschätzt wird, also immer kleiner ist als der tatsächliche Abstand, so findet der A*-Algorithmus garantiert den kürzesten Pfad zwischen Start und Ziel. Je kleiner $\hat{h}(n)$ im Verhältnis zu $h(n)$ ist, desto mehr Punkte muss A* expandieren und umso langsamer läuft der Algorithmus.
-			\item \textbf{$\hat{h}(n)=h(n)$:} Wenn der geschätzte Abstand eines Knotens genau dem tatsächlichen Abstand entspricht, expandiert A* immer die minimale Anzahl von Knoten entlang des kürzesten Pfades. Das heißt, dass wenn der kürzeste Pfad sechs Knoten enthält, der A*-Algorithmus nur genau sechs Knoten expandiert bevor der Kürzeste Pfad gefunden wurde. Zudem ist der Wert von $f_k(n)$ für jeden Teilknoten $k$ auf dem kürzesten Pfad immer gleich dem exakten Wert des Abstands zwischen Start und Zielknoten.
-			\item \textbf{$\hat{h}(n)>h(n)$:} Wenn der geschätzte Abstand eines Knotens größer ist als der tatsächliche Abstand zum Zielknoten, so kann nicht garantiert werden, dass nicht kürzere Pfade zu bereits geschlossenen Knoten existieren.  Somit müssten bereits geschlossene Knoten erneut geöffnet werden um den tatsächlich kürzesten Pfad zu finden. Wird dies nicht getan, so kann der A*-Algorithmus zwar unter Umständen schneller einen Pfad vom Start zum Ziel finden, es ist aber nicht garantiert, dass es sich um den Kürzesten handelt.
-			\item \textbf{$\hat{h}(n)\gg h(n)$} Wenn der Schätzwert der Heuristik viel größer ist als der tatsächliche Abstand zum Zielknoten, so ist die Abschätzungsfunktion $f(n)$ nur noch abhängig von $\hat{h}(n)$ und die anderen Terme können vernachlässigt werden. Somit hängt die Reihenfolge der expandierten Knoten nur noch von den Werten der Heuristik der entsprechenden Knoten ab.
+			\item \textbf{$\hat{h}(n)=0$:} Wenn der Wert der Heuristik konstant auf Null gesetzt wird, so ist dies gleich zu setzen damit, als würden keine Zusatzinformationen zur Berechnung der Route verwendet. Dies bedeutet das immer genau der Knoten aus der Menge von offenen Punkten ausgewählt wird, dessen Abstand zum Startknoten am kleinsten ist. Der kürzeste gefundene Pfad durch einen Zwischenknoten $n$ hat zu jedem Zeitpunkt $i$ immer $f_i(n)=g_i(n)$. Somit entspricht der A*-Algorithmus mit der Heuristik $\hat{h}(n)=0$ genau dem Dijkstra-Algorithmus aus \ref{Dijkstra_Alg}.
+			
+			\item \textbf{$\hat{h}(n)<h(n)$:} Wenn der Abstand eines Knotens $n$ zum Ziel immer unterschätzt wird, also immer kleiner ist als der tatsächliche Abstand, so findet der A*-Algorithmus, wie bereits im Abschnitt \ref{Abschaetz} gezeigt, garantiert den kürzesten Pfad zwischen Start und Ziel. Je kleiner $\hat{h}(n)$ im Verhältnis zu $h(n)$ ist, desto mehr Knoten muss A* expandieren und umso langsamer läuft der Algorithmus.
+			
+			\item \textbf{$\hat{h}(n)=h(n)$:} Wenn der geschätzte Abstand eines Knotens genau dem tatsächlichen Abstand entspricht, expandiert A* immer die minimale Anzahl von Knoten entlang des kürzesten Pfades. Das heißt, dass wenn der kürzeste Pfad sechs Knoten enthält, der A*-Algorithmus nur genau sechs Knoten expandiert bevor der Zielknoten geschlossen und somit der kürzeste Pfad gefunden wurde. Zudem ist der Wert von $f_k(n)$ für jeden Teilknoten $k$ auf dem kürzesten Pfad immer gleich dem exakten Wert des Abstands zwischen Start und Zielknoten.
+			
+			\item \textbf{$\hat{h}(n)>h(n)$:} Wenn der geschätzte Abstand eines Knotens größer ist als der tatsächliche Abstand zum Zielknoten, so kann nicht mit Bestimmtheit gesagt werden, dass kein kürzerer Pfad zu bereits geschlossenen Knoten existieren.  Somit müssten, um den möglicherweise existierenden tatsächlichen kürzesten Pfad zu finden, bereits geschlossene Knoten erneut geöffnet werden. Wird dies nicht getan, so kann der A*-Algorithmus zwar unter Umständen schneller einen Pfad vom Start zum Ziel finden, es ist aber nicht garantiert, dass es sich um den Kürzesten handelt.
+			
+			\item \textbf{$\hat{h}(n)\gg h(n)$} Wenn der Schätzwert der Heuristik viel größer ist als der tatsächliche Abstand zum Zielknoten, so ist die Entscheidungsfunktion $f(n)$ nur noch abhängig von $\hat{h}(n)$ und die anderen $g(n)$ kann vernachlässigt werden. Somit hängt die Reihenfolge der expandierten Knoten nur noch von den Werten der Heuristik der entsprechenden Knoten ab.
 		\end{enumerate}
 		 
-		Anhand der vorgestellten Eigenschaften der Heuristik wird erkennbar, das der A*-Algorithmus durch die Modifizierung der Heuristikberechnung an die gegebenen Anforderungen anpassbar ist. Anstatt einer genauen, aber langsamen Pfadberechnung, kann auf Kosten der Genauigkeit auch schnell ein möglicherweise nicht optimaler Weg zum Ziel gefunden werden. Zudem kann durch perfektes Wissen der Anlage in kürzester Zeit der kürzeste Weg ermittelt werden.
+		Anhand der vorgestellten Eigenschaften der Heuristik wird erkennbar, das der A*-Algorithmus durch die Modifizierung der Heuristikberechnung an die gegebenen Anforderungen anpassbar ist. Anstatt einer genauen, aber langsamen Pfadberechnung, kann auf Kosten der Genauigkeit auch schnell ein möglicherweise nicht optimaler Weg zum Ziel gefunden werden. Zudem kann durch perfektes Wissen der Topologie der Anlage in kürzester Zeit der kürzeste Weg ermittelt werden.
 	
 	\subsection{Darstellung der Funktionsweise}
-		Anhand eines einfachen Beispiels soll jetzt die Funktionsweise des A*-Algorithmus dargestellt werden. Die Knoten des folgenden Graphen sollen Städte darstellen und die Kanten geben die Verbindungen durch Schnellstraßen oder Autobahnen wieder. Als Heuristik wurde hier die Entfernung in Luftlinie zwischen den jeweiligen Städten und der Zielstadt gewählt, da diese die Bedingung $\hat{h}(n)\le h(n)$ erfüllt:
+		Anhand eines einfachen Beispiels soll jetzt die Funktionsweise des A*-Algorithmus dargestellt werden. Die Knoten des folgenden Graphen sollen Städte darstellen und die Kanten geben die Verbindungen durch Schnellstraßen oder Autobahnen wieder. Die Gewichtungen der Kanten stellen in diesem Beispiel die Entfernungen zwischen den Städten dar. Als Heuristik wurde hier die Entfernung in Luftlinie zwischen den jeweiligen Städten und der Zielstadt gewählt, da diese die Luftlinie immer kürzer\footnote{oder im Extremfall gleich lang.} ist als eine Straße zwischen den Städten und somit die Bedingung $\hat{h}(n)\le h(n)$ erfüllt ist:
 		\\ \textbf{insert graphic here} 
 
 	
@@ -175,17 +186,17 @@
 		\begin{equation} \label{eq:Heuristikbedingung}
 			0\le \hat{h}(n)\le h(n)
 		\end{equation}
-		Somit muss auch der Berechnungsaufwand zwischen dem des Dijkstra-Algorithmus und dem Aufwand im Falle einer exakten Heuristik liegen. Da bei einer exakten Heuristik die Zahl der expandierten Knoten nur von der Anzahl der Knoten auf dem kürzesten Pfad abhängt, ist die Berechnungsaufwand konstant. Daraus folgt für eine beliebige Heuristik, die die Bedingung \ref{eq:Heuristikbedingung} erfüllt:
+		Somit muss auch der Berechnungsaufwand zwischen dem des Dijkstra-Algorithmus und dem Aufwand im Falle einer exakten Heuristik liegen. Da bei einer exakten Heuristik die Zahl der expandierten Knoten nur von der Anzahl der Knoten auf dem kürzesten Pfad abhängt, ist die Berechnungsaufwand konstant. Daraus folgt für eine beliebige Heuristik, die Bedingung \ref{eq:Heuristikbedingung} erfüllt:
 		\begin{equation}
-			\mathcal{O}(\lvert \mathcal{V}\rvert ^2)\ge \mathcal{O}(\hat{h}(n))\ge \mathcal{O}(1)
+			\mathcal{O}(\lvert \mathcal{V}\rvert ^2)\ge \mathcal{O}(\hat{h}(n))\ge \mathcal{O}(\lvert \mathcal{V}\rvert)
 		\end{equation}
 		
-		Somit ist der Berechnungsaufwand im schlechtesten Fall quadratisch, im besten Fall aber konstant. Eine bessere Heuristik führt somit dazu, dass weniger Knoten als im schlechtesten Fall expandiert werden müssen und sich somit der Rechenaufwand verringert.
+		Somit ist der Berechnungsaufwand im schlechtesten Fall quadratisch, im besten Fall aber gleich der Anzahl der Knoten des kürzesten Pfads. Eine bessere Heuristik führt somit dazu, dass weniger Knoten als im schlechtesten Fall expandiert werden müssen und sich somit der Rechenaufwand verringert.
 		
 	\section{Zusammenspiel der Algorithmen}
 		\label{Verwendung_Alg}
-		Wie bereits in Abschnitt \ref{Betrachtete_Algorithmen} erwähnt, wird nun ausgenutzt, dass der Dijkstra-Algorithmus die Abstände zu allen betrachteten Knoten im Verlaufe seiner Wegberechnung ermittelt.  Der Nachteil, dass er vergleichsweise langsam arbeitet wird umgangen, indem der Algorithmus nicht in der zeitkritischen zyklischen Bearbeitungsphase sondern beim Hochfahren der CPU ausgeführt wird. Hier ist die Fahrzeugsteuerung\footnote{und vor allem auch der Watchdog-Timer} noch nicht aktiv und somit können auch längere Berechnungen ausgeführt werden. Zusätzlich werden nicht alle Knoten als Startknoten für die Abstandsberechnung mittels Dijkstra verwendet, sondern nur solche, die im späteren Anlagenbetrieb als endgültige Zielknoten für die Wegfindung infrage kommen. Transitknoten, die nur im Verlaufe der Abarbeitung einer Route durchfahren werden, aber an denen nie eine Route endet werden hierbei ausgelassen.\\
-		Die Ergebnisse der Dijkstra-Berechnungen werden in einer Tabelle gesichert und als Basis für die Heuristik der Wegfindung mittels A* im zyklischen Betrieb verwendet. Wie in \ref{Heuristik} gezeigt wurde ist die Anzahl der expandierten Knoten, und somit auch die Laufzeit, minimal wenn als Heuristik der exakte  Abstand zum Ziel genutzt wird. Dieser Fall ist, unter der Bedingung das sich die Anlage seit dem Hochfahren der CPU nur geringfügig geändert hat, durch die Verwendung der Abstände des entsprechenden Ziels aus der Dijkstra-Tabelle gegeben. Auch bei Änderungen wie Sperrungen von Kanten oder der Blockade von Teilstrecken durch andere Fahrzeuge erfüllt diese Heuristik noch die Anforderung $\hat{h}(n)<h(n)$, da die neue exakte Route sicher länger ist, als die vorausberechnete Route ohne Sperrungen. Bei Hinzufügen neuer Kanten zur bestehenden Anlage muss die CPU neu gestartet werden, damit die Bedingung aus Gleichung \ref{eq:Heuristikbedingung} in allen Fällen erfüllt ist.
+		Wie bereits in Abschnitt \ref{Betrachtete_Algorithmen} erwähnt, wird nun ausgenutzt, dass der Dijkstra-Algorithmus die Abstände vom Startknoten zu allen betrachteten Knoten ermittelt.  Der Nachteil, dass er vergleichsweise langsam arbeitet wird umgangen, indem der Algorithmus nicht in der zeitkritischen zyklischen Bearbeitungsphase sondern beim Hochfahren der CPU ausgeführt wird. Hier ist die Fahrzeugsteuerung\footnote{und vor allem auch der Watchdog-Timer} noch nicht aktiv und somit können auch längere Berechnungen ausgeführt werden. Zusätzlich werden nicht alle Knoten als Startknoten für die Abstandsberechnung mittels Dijkstra verwendet, sondern nur solche, die im späteren Anlagenbetrieb als endgültige Zielknoten für die Wegfindung infrage kommen.Als solche Zielknoten kommen allem die Knoten in Frage, an denen sich Maschinen befinden oder die eine spezielle Funktion, wie beispielsweise der Anlagenausgang, erfüllen. Transitknoten, die nur im Verlaufe der Abarbeitung einer Route durchfahren werden, aber an denen nie eine Route endet, können hierbei ausgelassen werden.\\
+		Die Ergebnisse der Dijkstra-Berechnungen werden in einer Tabelle gesichert und als Basis für die Heuristik der Wegfindung mittels A* im zyklischen Betrieb verwendet. Wie in  Abschnitt \ref{Heuristik} gezeigt wurde, ist die Anzahl der expandierten Knoten, und somit auch die Laufzeit, minimal, wenn als Heuristik der exakte Abstand zum Ziel genutzt wird. Dieser Fall ist, unter der Bedingung das sich die Anlage seit dem Hochfahren der CPU nur geringfügig geändert hat, durch die Verwendung der Abstände des entsprechenden Ziels aus der Dijkstra-Tabelle gegeben. Auch bei Änderungen, wie beispielsweise Sperrungen von Kanten oder der Blockade von Teilstrecken durch andere Fahrzeuge, erfüllt diese Heuristik noch die Anforderung $\hat{h}(n)\le h(n)$, da die neue exakte Route sicher länger ist, als die vorausberechnete ideale Route ohne Hindernisse. Bei Hinzufügen neuer Kanten zur bestehenden Anlage muss die CPU neu gestartet werden\footnote{aus im Abschnitt \ref{Knotenliste} beschriebenen Gründen}, da hierdurch kürzere Wege entstehen könnten, welche die Bedingung aus Gleichung \ref{eq:Heuristikbedingung} verletzen würden.
 		
 		
 				
