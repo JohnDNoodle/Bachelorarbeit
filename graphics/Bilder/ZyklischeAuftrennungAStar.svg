@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 1052.3622 744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="ZyklischeAuftrennungAStar.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Lend"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path5693"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#ff0000;stroke-opacity:1;fill:#ff0000;fill-opacity:1"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(1.1) rotate(180) translate(1,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path5675"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-1"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path5675-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.3560106"
+     inkscape:cx="417.40614"
+     inkscape:cy="372.41597"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="746"
+     inkscape:window-x="-8"
+     inkscape:window-y="424"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.26772)">
+    <g
+       id="g7270">
+      <path
+         sodipodi:nodetypes="cccccc"
+         inkscape:connector-curvature="0"
+         id="path5666"
+         d="m 227.87433,924.04462 0,14.74915 -216.075012,0 0,-499.25864 c 216.740102,0 -0.318708,-1.47491 216.075012,-1.47491 z"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:18, 18;stroke-dashoffset:30;stroke-opacity:1;marker-start:url(#Arrow1Lend)" />
+      <rect
+         ry="1.3236506"
+         y="805.03027"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136"
+         style="opacity:1;fill:#a0afff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         ry="1.3236506"
+         y="704.12158"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136-4"
+         style="opacity:1;fill:#ffff76;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         ry="1.3236506"
+         y="603.21283"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136-5"
+         style="opacity:1;fill:#a0afff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         ry="1.3236506"
+         y="502.30408"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136-8"
+         style="opacity:1;fill:#88ff6d;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text7028"
+         y="527.09637"
+         x="118.64021"
+         style="font-style:normal;font-weight:normal;font-size:23.47747421px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           id="tspan7032"
+           y="527.09637"
+           x="118.64021"
+           sodipodi:role="line">Fahrzeugsteuerung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7036"
+         y="628.89294"
+         x="144.95441"
+         style="font-style:normal;font-weight:normal;font-size:18.03911018px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="628.89294"
+           x="144.95441"
+           id="tspan7038"
+           sodipodi:role="line">Kommunikation</tspan><tspan
+           id="tspan7048"
+           y="651.44183"
+           x="144.95441"
+           sodipodi:role="line">Fahrzeugsteuerung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7040"
+         y="735.98267"
+         x="166.05455"
+         style="font-style:normal;font-weight:normal;font-size:22.32487106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="735.98267"
+           x="166.05455"
+           id="tspan7042"
+           sodipodi:role="line">Wegfindung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7044"
+         y="831.19635"
+         x="151.97913"
+         style="font-style:normal;font-weight:normal;font-size:20.47100449px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="831.19635"
+           x="151.97913"
+           id="tspan7046"
+           sodipodi:role="line">Kommunikation</tspan><tspan
+           id="tspan7050"
+           y="856.7851"
+           x="151.97913"
+           sodipodi:role="line">Wegfindung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7052"
+         y="758.85419"
+         x="82.217239"
+         style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="758.85419"
+           x="82.217239"
+           id="tspan7054"
+           sodipodi:role="line">1 bis n Schleifendurchlaufe pro Zyklus</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7056"
+         y="422.46158"
+         x="11.397953"
+         style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="422.46158"
+           x="11.397953"
+           id="tspan7058"
+           sodipodi:role="line">1 Zyklusdurchlauf pro Route</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="421.08817"
+       y="515.49323"
+       id="text7256"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7258"
+         x="421.08817"
+         y="515.49323" /></text>
+    <g
+       id="g7333"
+       transform="translate(-49.409644,1.5527121e-8)"
+       style="">
+      <path
+         sodipodi:nodetypes="cccc"
+         inkscape:connector-curvature="0"
+         id="path7060"
+         d="m 440.94948,710.09961 -16.0508,32.53413 22.61704,-6.84929 -21.15788,36.81493"
+         style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:1.92908072;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text7260"
+         y="721.98132"
+         x="463.12323"
+         style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+         xml:space="preserve"><tspan
+           y="721.98132"
+           x="463.12323"
+           id="tspan7262"
+           sodipodi:role="line">bei großem n </tspan><tspan
+           id="tspan7264"
+           y="740.73132"
+           x="463.12323"
+           sodipodi:role="line">möglicherweise </tspan><tspan
+           id="tspan7266"
+           y="759.48132"
+           x="463.12323"
+           sodipodi:role="line">max. Zykluszeit</tspan><tspan
+           id="tspan7268"
+           y="778.23132"
+           x="463.12323"
+           sodipodi:role="line">überschritten</tspan></text>
+    </g>
+    <g
+       transform="translate(616.00379,0)"
+       id="g7270-8">
+      <path
+         sodipodi:nodetypes="cccccc"
+         inkscape:connector-curvature="0"
+         id="path5666-4"
+         d="m 227.87433,924.04462 0,14.74915 -216.075012,0 0,-499.25864 c 216.740102,0 -0.318708,-1.47491 216.075012,-1.47491 z"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:18, 18;stroke-dashoffset:30;stroke-opacity:1;marker-start:url(#Arrow1Lend-1)" />
+      <rect
+         ry="1.3236506"
+         y="805.03027"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136-54"
+         style="opacity:1;fill:#a0afff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         ry="1.3236506"
+         y="704.12158"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136-4-9"
+         style="opacity:1;fill:#ffff76;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         ry="1.3236506"
+         y="603.21283"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136-5-6"
+         style="opacity:1;fill:#a0afff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <rect
+         ry="1.3236506"
+         y="502.30408"
+         x="65.350021"
+         height="73.575699"
+         width="335.37302"
+         id="rect4136-8-8"
+         style="opacity:1;fill:#88ff6d;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text7028-8"
+         y="527.09637"
+         x="118.64021"
+         style="font-style:normal;font-weight:normal;font-size:23.47747421px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           id="tspan7032-8"
+           y="527.09637"
+           x="118.64021"
+           sodipodi:role="line">Fahrzeugsteuerung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7036-8"
+         y="628.89294"
+         x="144.95441"
+         style="font-style:normal;font-weight:normal;font-size:18.03911018px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="628.89294"
+           x="144.95441"
+           id="tspan7038-5"
+           sodipodi:role="line">Kommunikation</tspan><tspan
+           id="tspan7048-5"
+           y="651.44183"
+           x="144.95441"
+           sodipodi:role="line">Fahrzeugsteuerung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7040-3"
+         y="735.98267"
+         x="166.05455"
+         style="font-style:normal;font-weight:normal;font-size:22.32487106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="735.98267"
+           x="166.05455"
+           id="tspan7042-6"
+           sodipodi:role="line">Wegfindung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7044-1"
+         y="831.19635"
+         x="151.97913"
+         style="font-style:normal;font-weight:normal;font-size:20.47100449px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="831.19635"
+           x="151.97913"
+           id="tspan7046-8"
+           sodipodi:role="line">Kommunikation</tspan><tspan
+           id="tspan7050-4"
+           y="856.7851"
+           x="151.97913"
+           sodipodi:role="line">Wegfindung</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7052-1"
+         y="758.85419"
+         x="108.21724"
+         style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="758.85419"
+           x="108.21724"
+           id="tspan7054-8"
+           sodipodi:role="line">1 Schleifendurchlauf pro Zyklus</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7056-5"
+         y="422.46158"
+         x="11.397953"
+         style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="422.46158"
+           x="11.397953"
+           id="tspan7058-9"
+           sodipodi:role="line">1 bis n Zyklusdurchläufe pro Route</tspan></text>
+    </g>
+    <g
+       id="g4211"
+       transform="translate(-6,0)">
+      <rect
+         y="623.16199"
+         x="471.97272"
+         height="39.085239"
+         width="80.382851"
+         id="rect7437"
+         style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.79999995;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:30;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cccc"
+         inkscape:connector-curvature="0"
+         id="rect7441"
+         d="m 543.8748,612.08031 30.62427,30.62427 -30.62427,30.62426 c 0,-61.24853 0,0 0,-61.24853 z"
+         style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.57776177;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:30;stroke-opacity:1" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:25px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="19.173891"
+       y="970.50439"
+       id="text7459"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="19.173891"
+         y="970.50439"
+         id="tspan7463" /></text>
+  </g>
+</svg>
