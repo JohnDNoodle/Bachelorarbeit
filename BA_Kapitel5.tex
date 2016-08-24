@@ -6,7 +6,14 @@
 	\\[4pt]
 	Da das Projekt von zwei Personen bearbeitet und die Kommunikation zwischen beiden Teilschichten separat entwickelt wurde, kann die Kommunikationsschicht in zwei getrennte Unterschichten aufgeteilt werden. Jede dieser Teilschichten regelt die Schnittstelle zu der zugehörigen Schicht. Aus diesem Grund wird in folgenden Abschnitt vor allem die Kommunikation aus Sicht der Wegfindung beschrieben. Beide Unterschichten wurden aber aufeinander abgestimmt und sind im Kern identisch und haben nur unterschiedliche Verwendungsarten und Implementierungen.
 	\\[4pt]
-	Wie bereits erwähnt, erfüllt die Kommunikationsschicht vor allem zwei Anforderungen. Die erste Anforderung ist der Datenaustausch zwischen den Schichten des Anwenderprogramms eines einzelnen \ac{FTF}. Da in der vorliegenden Realisierung der Anlage sowohl die Wegfindung als auch die Fahrzeugsteuerung auf der selben Steuerung ausgeführt werden, wurde diese Kommunikationsart als "`Interne Kommunikation"' bezeichnet. Im Gegensatz hierzu wurde der Austausch von Informationen zwischen anderen Fahrzeugen "`Externe Kommunikation"' genannt. Es ist grundsätzlich möglich, beide Arten der Kommunikation gemeinsam zu implementieren. Da aber für den Datenaustausch innerhalb der \ac{SPS} das Netz nicht unnötig belastet werden muss, wurde entschieden die beiden Arten von Kommunikation aufzutrennen. Dies hat den weiteren Vorteil das bei internem Datenaustausch die Daten schneller für die jeweils andere Schicht verfügbar sind, als dies beispielsweise über eine drahtlose Verbindung der Fall wäre.\textbf{insert Schichten graphic here}
+	Wie bereits erwähnt, erfüllt die Kommunikationsschicht vor allem zwei Anforderungen. Die erste Anforderung ist der Datenaustausch zwischen den Schichten des Anwenderprogramms eines einzelnen \ac{FTF}. Da in der vorliegenden Realisierung der Anlage sowohl die Wegfindung als auch die Fahrzeugsteuerung auf der selben Steuerung ausgeführt werden, wurde diese Kommunikationsart als "`Interne Kommunikation"' bezeichnet. Im Gegensatz hierzu wurde der Austausch von Informationen zwischen anderen Fahrzeugen "`Externe Kommunikation"' genannt. Abbildung \ref{Kommunikationsschicht Gliederung} zeigt das Zusammenspiel der einzelnen Teilschichten. Es ist grundsätzlich möglich, beide Arten der Kommunikation gemeinsam zu implementieren. Da aber für den Datenaustausch innerhalb der \ac{SPS} das externe Netz nicht unnötig belastet werden muss, wurde entschieden die beiden Arten von Kommunikation aufzutrennen. Dies hat den weiteren Vorteil das bei internem Datenaustausch die Daten schneller für die jeweils andere Schicht verfügbar sind, als dies beispielsweise über eine drahtlose Verbindung der Fall wäre.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.9]{/Bilder/KommunikationSchichtenPDF}
+		\vspace{0.2cm}
+		\caption{Feinuntergliederung der Kommunikationsschicht.}\label{Kommunikationsschicht Gliederung}
+	\end{figure}
 	
 	\subsection{Schnittstelle zur Kommunikationsschicht}
 		
@@ -18,8 +25,15 @@
 			\item Signalisierungsbits zum Erkennen oder Anstoßen der Kommunikation.
 		\end{itemize}
 		
-		Am Beispiel der Wegfindungsschicht bedeutet dies, dass der Schnittstellen-\ac{DB} für die ausgehende Kommunikation aus einem Datentyp für den internen Datenaustausch besteht,der die in Abschnitt \ref{Routengeneration} beschriebenen Routeninformationen enthält. Der externe Datenaustausch mit anderen Fahrzeugen wird mit einem Byte-Array konstanter Größe realisiert. Da für die Wegfindung als einziger möglicher Partner für eine ausgehenden Verbindung jedoch nur die korrespondierende Fahrzeugsteuerung  in Frage kommt, wird das Byte-Array bei der Implementierung der Wegfindungs- und Fahrzeugsteuerungsschicht auf der gleichen Steuerung  im Schnittstellen-\ac{DB} für die ausgehende Kommunikation hier nicht benötigt. Das vorhandene Signalisierungsbit gibt eine Sendeanforderung für die Route aus der Wegfindungsschicht an die Kommunikationsunterschicht der Wegfindung weiter. Die entsprechenden Bausteine reagieren auf diese Anforderung und stoßen die Übertragung an. \textbf{insert graphic of DB here}.
-		\\[4pt]
+		Am Beispiel der Wegfindungsschicht bedeutet dies, dass der Schnittstellen-\ac{DB} für die ausgehende Kommunikation aus einem Datentyp für den internen Datenaustausch besteht,der die in Abschnitt \ref{Routengeneration} beschriebenen Routeninformationen enthält. Der externe Datenaustausch mit anderen Fahrzeugen wird mit einem Byte-Array konstanter Größe realisiert. Für die Wegfindung kommt als einziger möglicher Partner für eine ausgehenden Verbindung jedoch nur die korrespondierende Fahrzeugsteuerung  in Frage. Aus diesem Grund wird das Byte-Array bei der Implementierung der Wegfindungs- und Fahrzeugsteuerungsschicht auf der gleichen Steuerung  im Schnittstellen-\ac{DB} für die ausgehende Kommunikation hier nicht benötigt. Stattdessen wird der intern verwendete Routendatentyp übertragen, da bei dem internen Kopiervorgang eine Aufspaltung in die einzelnen Bytes nicht benötigt wird. Das vorhandene Signalisierungsbit, in Abbildung \ref{InterfaceDB} mit "`send"' bezeichnet, gibt eine Sendeanforderung für die Route aus der Wegfindungsschicht an die Kommunikationsunterschicht der Wegfindung weiter. Die entsprechenden Bausteine reagieren auf diese Anforderung und stoßen die Übertragung an.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.8]{/Bilder/TIA_InterfaceDBAusgehend}
+			\vspace{0.2cm}
+			\caption{Aufbau des Schnittstellen-\ac{DB} für ausgehende Kommunikationsverbindungen.}\label{InterfaceDB}
+		\end{figure}
+
 		Der Schnittstellen-DB für die eingehende Kommunikation besitzt analog zum Ausgehenden zwei Datenbereiche für interne und externe Kommunikation, wobei hier beide als Byte-Arrays realisiert sind. Im Unterschied zum vorherigen \ac{DB} enthält dieser zwei getrennte Signalisierungsmerker für intern und extern erhaltene Daten. Der Grund hierfür ist die zeitliche Staffelung der beiden Kommunikationsarten, die in Abschnitt \ref{Anpassung Kommunikation} näher erläutert wird.
 		
 	\subsection{Interne Kommunikation}
@@ -39,8 +53,15 @@
 			\end{tabular}\\
 			\caption{Aufbau des Arrays zur Übertragung von Positionsdaten.}
 		\end{table}
-		Die ID des sendenden Fahrzeugs wird für die interne Kommunikation nur dann benötigt, wenn sich die Wegfindung nicht auf der selben Steuerung wie die Fahrzeugsteuerung befindet. Durch die ID des aktuellen Knotens wird die bevorstehende Kreuzung identifiziert. Anhand des Knotens an Index 2, zu dem an der bevorstehenden Kreuzung nach der derzeitigen Route abgebogen wird, kann die Teilstrecke\footnote{Verbindungskante zwischen aktuellem und nächstem Knoten.} bestimmt werden, die das \ac{FTF} voraussichtlich als nächstes befahren wird.\textbf{Insert descriptive graphic Position Data here} Diese Angabe ist vor allem für die Kollisionsvermeidung in Abschnitt \ref{Kollisionsvermeidung} von Bedeutung. Stimmen die beiden KnotenIDs der Positionsdaten überein, so bedeutet dies, dass der Zielknoten einer Teilroute erreicht wurde. Gemäß Abschnitt \ref{Simulation Station} wird hiermit die Simulation der Bearbeitungsdauer gestartet und die Berechnung der nächsten Teilroute angestoßen.
-		\\[4pt]
+		Die ID des sendenden Fahrzeugs wird für die interne Kommunikation nur dann benötigt, wenn sich die Wegfindung nicht auf der selben Steuerung wie die Fahrzeugsteuerung befindet. Durch die ID des aktuellen Knotens wird die bevorstehende Kreuzung identifiziert. Anhand des Knotens an Index 2, zu dem an der bevorstehenden Kreuzung nach der derzeitigen Route abgebogen wird, kann die Teilstrecke\footnote{Verbindungskante zwischen aktuellem und nächstem Knoten.} bestimmt werden, die das \ac{FTF} voraussichtlich als nächstes befahren wird.Abbildung \ref{Identifikation Teilstrecke} zeigt, wie aus den Positionsdaten die nächste Teilstrecke eines Fahrzeugs bestimmt werden kann. Diese Angabe ist vor allem für die Kollisionsvermeidung in Abschnitt \ref{Kollisionsvermeidung} von Bedeutung. Stimmen die beiden KnotenIDs der Positionsdaten überein, so bedeutet dies, dass der Zielknoten einer Teilroute erreicht wurde. Gemäß Abschnitt \ref{Simulation Station} wird hiermit die Simulation der Bearbeitungsdauer gestartet und die Berechnung der nächsten Teilroute angestoßen.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.6]{/Bilder/IdentifikationTeilstreckePDF}
+			\vspace{0.2cm}
+			\caption{Ermittlung der nächsten geplanten Teilstrecke eines Fahrzeugs anhand der erhaltenen Positionsdaten.}\label{Identifikation Teilstrecke}
+		\end{figure}
+		
 		Um eine berechnete Teilroute an die Fahrzeugsteuerung zu übersenden, wird diese zunächst im ausgehenden Schnittstellen-\ac{DB} im Speicherbereich für die Route abgelegt. Durch Setzen des Signalmerkers wird ein Kopiervorgang, analog zu dem beim Erhalten der Positionsdaten, gestartet und nach Abschluss der Übertragung das Signalisierungsbit des eingehenden Schnittstellen-{DB}s der Fahrzeugsteuerung gesetzt. Dies signalisiert, dass dem Fahrzeug eine neue Teilroute zur Verfügung gestellt wurde. Dies bedeutet eigentlich, das die internen Kommunikationsbausteine der beiden Unterschichten in diesem Fall nicht unabhängig voneinander sind, da sie den eingehenden \ac{DB} der jeweils anderen Schicht kennen müssen, um die Daten dort abzulegen. Dies wurde aufgrund der einfacheren Implementierung jedoch in Kauf genommen und bedeutet nicht, das dies auch bei Verwendung anderer Kommunikationsbausteine\footnote{beispielsweise Bausteine für Kommunikation über \ac{TCP}.} der Fall ist.
 				
 	\subsection{Externe Kommunikation}
@@ -85,14 +106,29 @@
 
 \section{Algorithmische Kollisionsvermeidung}
 	\label{Kollisionsvermeidung}
-	Wenn sich mehrere \ac{FTF} zur gleichen Zeit in der Anlage befinden, muss für eine funktionierende Anlage verhindert werden, das sich die Wege dieser Fahrzeuge kreuzen. Es muss somit verhindert werden, dass zwei Fahrzeuge zeitgleich den selben Streckenabschnitt befahren.  Die Fahrzeuge verfügen an der Vorderseite über einen Reflex-Lichtschranken-Sensor zur Kollisionserkennung. Dieser hält das \ac{FTF} bei Erkennung eines Hindernisses an, indem die Motoren abgeschaltet werden. Verschwindet das Hindernis, setzt das Fahrzeug selbstständig die aktuelle Route fort. Da dieser Sensor bei der Erkennung eines voran fahrenden Fahrzeugs ein mögliches Auffahren verhindert, ist es somit kein Problem, wenn beide Fahrzeuge auf dem gleichen Streckenabschnitt hintereinander in die gleiche Richtung fahren. Da ein \ac{FTF} jedoch nur an Knotenpunkten die Richtung ändern kann, muss unbedingt verhindert werden, dass sich zwei Fahrzeuge auf dem gleichen Streckenabschnitt entgegen kommen. Ansonsten würden sich je nach Einstellung der Reichweite des Kollisionssensors entweder die Fahrzeuge gegenseitig erkennen und permanent stehen bleiben, oder die tiefliegenden \ac{RFID}-Ausleger stoßen zusammen, da sie zu weit unten angebracht sind, um von dem Kollisionssensor erkannt zu werden.\\ \textbf{insert sideview of vehicle with sensors here}
+		
+	Wenn sich mehrere \ac{FTF} zur gleichen Zeit in der Anlage befinden, muss für eine funktionierende Anlage verhindert werden, das sich die Wege dieser Fahrzeuge kreuzen. Es muss somit verhindert werden, dass zwei Fahrzeuge zeitgleich den selben Streckenabschnitt befahren.  Die Fahrzeuge verfügen an der Vorderseite über einen Reflex-Lichtschranken-Sensor zur Kollisionserkennung. Dieser hält das \ac{FTF} bei Erkennung eines Hindernisses an, indem die Motoren abgeschaltet werden. Verschwindet das Hindernis, setzt das Fahrzeug selbstständig die aktuelle Route fort. Da dieser Sensor bei der Erkennung eines voran fahrenden Fahrzeugs ein mögliches Auffahren verhindert, ist es somit kein Problem, wenn beide Fahrzeuge auf dem gleichen Streckenabschnitt hintereinander in die gleiche Richtung fahren. Da ein \ac{FTF} jedoch nur an Knotenpunkten die Richtung ändern kann, muss unbedingt verhindert werden, dass sich zwei Fahrzeuge auf dem gleichen Streckenabschnitt entgegen kommen. Abbildung \ref{FTS Seite Sensoren} zeigt die Anordnung der relevanten Sensoren am Fahrzeug. Bei Einstellung einer großen Reichweite des Kollisionssensors  würden sich die Fahrzeuge gegenseitig erkennen und permanent stehen bleiben. Sind die Kollisionssensoren jedoch kurz eingestellt, stoßen die tiefliegenden \ac{RFID}-Ausleger zusammen, da sie zu weit unten angebracht sind, um von dem Sensoren erkannt zu werden. 
+	
+	\begin{figure}
+		\centering
+		\includegraphics[scale= 0.5, clip, trim = 0mm 50mm 150mm 80mm]{/Bilder/FTS_Seitenansicht}
+		\vspace{0.2cm}
+		\caption{Seitenansicht des \ac{FTF}. A ist der tiefliegende \ac{RFID}-Sensorausleger, B der höher befestigte optische Kollisionssensor.} \label{FTS Seite Sensoren}
+	\end{figure}
 	
 	\subsection{Generelle Vorgehensweise bei Kooperativen Wegfindungsalgorithmen}
 		\label{Coop Pathfinding}
 		Um die Vorgehensweise der algorithmischen Kollisionsvermeidung klar darstellen zu können, ist es von Vorteil, zunächst die Grundzüge der kooperativen Wegfindung zu erläutern. Vor allem in Computersimulationen und Computerspielen werden häufig Algorithmen verwendet, welche die Bewegungen mehrerer Einheiten koordinieren und aufeinander abstimmen. 
 		\\[4pt]
-		Um sicher zu stellen, dass Einheiten einen optimalen Weg nehmen, ohne sich gegenseitig zu behindern, ist es nötig, die Wege aller beteiligten Akteure zu kennen und diese in den Wegfindungsalgorithmus mit einfließen zu lassen. Die Berechnung des Weges stützt sich hierbei auf eine dreidimensionale Matrix, bei der die ersten beiden Dimensionen die Topologie und die dritte Dimension die Zeit darstellen. Da sich Einheiten getaktet fortbewegen kann somit jeder Einheit innerhalb dieser Matrix zu jedem Zeitpunkt ein bestimmter Index zugeordnet werden\cite{Silver2005}.\textbf{insert graphic space-time matrix here} Diese Vorgehensweise kann verglichen werden mit der Reservierung eines bestimmten Knotenpunktes zu einem gegebenen Zeitpunkt, zu dem dieser Knoten für andere Einheiten blockiert ist\cite{Erdmann1986}.
-		\\[4pt]
+		Um sicher zu stellen, dass Einheiten einen optimalen Weg nehmen, ohne sich gegenseitig zu behindern, ist es nötig, die Wege aller beteiligten Akteure zu kennen und diese in den Wegfindungsalgorithmus mit einfließen zu lassen. Die Berechnung des Weges stützt sich hierbei beispielsweise auf eine dreidimensionale Matrix, bei der die ersten beiden Dimensionen die Topologie und die dritte Dimension die Zeit darstellen. Da sich Einheiten getaktet fortbewegen kann somit jeder Einheit innerhalb dieser Matrix zu jedem Zeitpunkt ein bestimmter Index zugeordnet werden \cite{Silver2005}. Abbildung \ref{SpaceTimeMatrix} zeigt eine solche Zuordnung anhand einer einfachen Topologie. Diese Vorgehensweise kann verglichen werden mit der Reservierung eines bestimmten Knotenpunktes zu einem gegebenen Zeitpunkt, zu dem dieser Knoten für andere Einheiten blockiert ist \cite{Erdmann1986}. Andere Einheiten planen ihre Routen unter Berücksichtigung bereits bestehender Reservierungen.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.8]{/Bilder/SpaceTimeMatrixPDF}
+			\vspace{0.2cm}
+			\caption{Dreidimensionale Matrix mit Reservierung von Knoten  zu bestimmten Zeitpunkten entlang einer Route. Angelehnt an \cite{Silver2005}.}\label{SpaceTimeMatrix}
+		\end{figure}
+		
 		In der hier realisierten Modellanlage ist diese Vorgehensweise jedoch nur begrenzt anwendbar. Da die Wegberechnung auf die einzelnen Fahrzeuge verteilt ist und nicht zentral gesammelt durchgeführt wird, müsste jedes Fahrzeug immer seine komplette Teilroute allen Anderen mitteilen. Dies ist theoretisch möglich, würde aber die Kommunikationslast deutlich erhöhen somit die Skalierbarkeit der Anlage verschlechtern.
 		\\[4pt]
 		Ein weiterer Unterschied ist, dass im vorliegenden Anwendungsfall nicht die Graphenknoten reserviert werden müssten, sondern die Verbindungskanten, da diese die blockierten Streckenabschnitte darstellen. Da die Anlage um einiges mehr Kanten besitzt als Knoten, ist es aufgrund der Speicherbeschränkungen der leistungsschwächeren Steuerungen nicht möglich, Matrizen mit einer hohen Zeitgranularität zu verwenden.
@@ -103,8 +139,15 @@
 		\\[4pt]
 		Eine Möglichkeit, die Vorhersagen zu verbessern wäre, anhand von Zeitmessungen Werte für die Belegdauer von Teilstrecken zu bestimmen und diese dann als Basis für die Vorhersagen zu benutzen. Dies birgt jedoch das Problem, dass das Verhältnis von Fahrtzeit auf einer Strecke zu der Zeit die benötigt wird um an einem Knoten ab zu biegen nicht vernachlässigbar ist. Somit müssten für jede einzelne Verbindungsstrecke mehrere Messungen gemacht werden, die alle Abbiegemöglichkeiten beinhalten. Bei der Vorhersage muss in diesem Fall aus den verschiedenen Messungen diejenige ausgewählt werden, die für diese Kombination aus Teilstrecken die Richtige ist. Dies erhöht den ohnehin bereits hohen Speicherbedarf der Wegfindung. Zudem würde hierbei immer noch der Ladezustand der Akkus nicht mit berücksichtigt werden, der wie bereits erwähnt zu starken Geschwindigkeitsunterschieden führen kann.
 		\\[4pt]
-		Bei genauerer Betrachtung lässt sich aussagen, dass als brauchbare Vorhersage für die Position nur die Beschränkung auf die unmittelbare Zukunft sinnvoll ist. Dies bedeutet das beim erreichen eines Entscheidungsknotens nur mit Sicherheit gesagt werden kann, auf welcher der vier möglichen Verbindungsstrecken sich das Fahrzeug als nächstes befinden wird.\textbf{insert clarification graphic here} Bei einem dynamischen System kann es vorkommen, das die geplante Route am nächsten Knoten bereits wieder verworfen wird und somit etwaige Vorhersagen über die erste Verbindungskante hinaus ohnehin nicht mehr gültig sind.
-		\\[4pt]
+		Bei genauerer Betrachtung lässt sich aussagen, dass als brauchbare Vorhersage für die Position nur die Beschränkung auf die unmittelbare Zukunft sinnvoll ist. Dies bedeutet das beim erreichen eines Entscheidungsknotens nur mit Sicherheit gesagt werden kann, auf welcher der vier möglichen Verbindungsstrecken sich das Fahrzeug als nächstes befinden wird.\textbf{insert clarification graphic here} Bei einem dynamischen System kann es vorkommen, das die geplante Route am nächsten Knoten bereits wieder verworfen wird und somit etwaige Vorhersagen über die erste Verbindungskante hinaus ohnehin nicht mehr gültig, sondern nur noch eine von vier möglichen Teilrouten sind, wie Abbildung \ref{Einstufig} zeigt. Nur über grüne Teilstrecken kann bei Erreichen des Knoten "`1"' mit Gewissheit eine Aussage über deren Belegungszustand gemacht werden.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/JustificationEinstufigPDF}
+			\vspace{0.2cm}
+			\caption{Mögliche Teilrouten bei dreistufiger Vorhersage.}\label{Einstufig}
+		\end{figure}
+		
 		Aus diesem Grund wurde entschieden, die dynamische Wegfindung auf der Basis einer einstufigen Positionsvorhersage zu implementieren.
 		
 \section{Verhinderung von Deadlock-Situationen}
@@ -119,12 +162,19 @@
 	
 	\subsection{Kommunikation verifizierter Teilstrecken}
 		\label{Anpassung Kommunikation}
-		Die Möglichkeit, das sich die als nächstes geplante Teilstrecke bei dem Erreichen eines Knotens ändern kann, hat zur Folge, dass auch die externe Kommunikation mit anderen Fahrzeugen modifiziert werden muss. Es kann nicht länger bei Erkennung einer Kreuzung durch den \ac{RFID}-Sensor parallel die Positionsdaten mit der geplanten Teilstrecke an die Wegfindungsschicht und die anderen Fahrzeuge gleichzeitig weitergeleitet werden. Dies würde dazu führen das nach einer notwendigen Neuberechnung durch die Wegfindung das Fahrzeug nicht mehr die vorher publik gemachte Teilstrecke befährt, sondern eine andere Verbindungsstrecke auf der neuen Route belegt. Dadurch würden entgegenkommende Fahrzeuge nicht wissen, das diese Strecke eigentlich bereits belegt ist.
+		Die Möglichkeit, dass sich die als nächstes geplante Teilstrecke bei dem Erreichen eines Knotens ändern kann, hat zur Folge, dass auch die externe Kommunikation mit anderen Fahrzeugen modifiziert werden muss. Es kann nicht länger bei Erkennung einer Kreuzung durch den \ac{RFID}-Sensor parallel die Positionsdaten mit der geplanten Teilstrecke an die Wegfindungsschicht und die anderen Fahrzeuge gleichzeitig weitergeleitet werden. Dies würde dazu führen das nach einer notwendigen Neuberechnung durch die Wegfindung das Fahrzeug nicht mehr die vorher publik gemachte Teilstrecke befährt, sondern eine andere Verbindungsstrecke auf der neuen Route belegt. Dadurch würden entgegenkommende Fahrzeuge nicht wissen, das diese Strecke eigentlich bereits belegt ist.
 		\\[4pt]
 		Eine Möglichkeit ist, bei einer Änderung der geplanten Route die aktualisierten Positionsdaten erneut zu senden. Dies erhöht aber die Kommunikationslast und ist deshalb nur begrenzt sinnvoll. Als andere  Lösung wurden interne von der externen Kommunikation getrennt und zeitlich gestaffelt. Das aktualisierte Kommunikationsmodell sieht vor, das bei der Erkennung des Knotens zunächst nur die Wegfindung die geplante nächste Teilstrecke erhält. Diese verifiziert die Route und sendet in jedem Fall eine aktualisierte Route an die Fahrzeugsteuerung zurück. Diese besteht entweder aus dem Teil der noch gültigen Route, der vom aktuellen Knoten zum Zielknoten führt, oder aus der neu berechneten Ausweichroute. \textbf{insert graphics for both options here.}
 		\\[4pt]
-		Hat die Fahrzeugsteuerung eine Route von der Wegfindung erhalten, so teilt sie die aktualisierte nächste Teilstrecke den anderen Fahrzeugen mit. Erhält die Fahrzeugsteuerung nicht sofort eine Route\footnote{auch nicht die aktualisierte alte Route.}, so bewegt sie sich langsam weiter auf die Kreuzung zu, bis der Zeitpunkt erreicht ist, an dem die letzte Möglichkeit besteht die Route noch zu ändern. Dies ist der Zeitpunkt an dem sich das Fahrzeug genau auf der Mitte der Kreuzung befindet\footnote{da sich die Fahrzeuge auf der Stelle drehen, muss sich die mittlere Radachse genau auf der Kreuzung befinden.}. Hat das Fahrzeug bis zu diesem Zeitpunkt noch keine Rückmeldung von der Wegfindungsschicht erhalten, so bleibt es auf der Kreuzung stehen und wartet auf die Wegfindung. Die Wahrscheinlichkeit ist in diesem Fall hoch, dass die Verzögerung durch eine Belegung des nächsten Streckenabschnitts durch ein anderes Fahrzeug verursacht wurde, die eine Neuberechnung der Route mit sich bringt. Erst wenn eine Route empfangen wurde, setzt sich das Fahrzeug wieder in Bewegung. \textbf{insert flow diagram with recalculation behavior here}
-		\\[4pt]
+		Hat die Fahrzeugsteuerung eine Route von der Wegfindung erhalten, so teilt sie die aktualisierte nächste Teilstrecke den anderen Fahrzeugen mit. Erhält die Fahrzeugsteuerung nicht sofort eine Route\footnote{auch nicht die aktualisierte alte Route.}, so bewegt sie sich langsam weiter auf die Kreuzung zu, bis der Zeitpunkt erreicht ist, an dem die letzte Möglichkeit besteht die Route noch zu ändern. Dies ist der Zeitpunkt an dem sich das Fahrzeug genau auf der Mitte der Kreuzung befindet\footnote{da sich die Fahrzeuge auf der Stelle drehen, muss sich die mittlere Radachse genau auf der Kreuzung befinden.}. Hat das Fahrzeug bis zu diesem Zeitpunkt noch keine Rückmeldung von der Wegfindungsschicht erhalten, so bleibt es auf der Kreuzung stehen und wartet auf die Wegfindung. Die Wahrscheinlichkeit ist in diesem Fall hoch, dass die Verzögerung durch eine Belegung des nächsten Streckenabschnitts durch ein anderes Fahrzeug verursacht wurde, die eine Neuberechnung der Route mit sich bringt. Erst wenn eine Route empfangen wurde, setzt sich das Fahrzeug wieder in Bewegung.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.5]{/Bilder/SequenzDiagrammKommunikationPDF}
+			\vspace{0.2cm}
+			\caption{Sequenzdiagramm des Übertragungsvorgangs aktualisierter Teilrouten.}
+		\end{figure}
+		
 		Um einen reibungslosen Ablauf der Anlage garantieren zu können, ist es somit wichtig, das die Neuberechnung der Route möglichst schnell ausgeführt wird. Aus diesem Grund wurde in Kapitel \ref{Implementierung} ein so hoher Wert auf die Effizienz der Implementierung der Algorithmen gelegt, um einen Halt an der Kreuzung zu vermeiden.
 		
 \section{Erreichte Dynamik}

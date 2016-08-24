@@ -239,13 +239,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.245523"
-     inkscape:cx="313.87268"
+     inkscape:cx="248.18642"
      inkscape:cy="821.251"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1148"
+     inkscape:window-height="1178"
      inkscape:window-x="1358"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
@@ -257,7 +257,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -282,7 +282,7 @@
          height="81.695122"
          width="74.17057"
          id="rect4140"
-         style="opacity:1;fill:#ff00ff;fill-opacity:0.58823529;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.5999999;stroke-dashoffset:0" />
+         style="opacity:1;fill:#ff32ff;fill-opacity:0.58823532;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.59999990000000030;stroke-dashoffset:0" />
       <path
          inkscape:connector-curvature="0"
          id="path4244"
@@ -314,7 +314,7 @@
          height="81.695122"
          width="74.17057"
          id="rect4140-9"
-         style="opacity:1;fill:#ff00ff;fill-opacity:0.58823529;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.5999999;stroke-dashoffset:0" />
+         style="opacity:1;fill:#ff32ff;fill-opacity:0.58823532;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.59999990000000030;stroke-dashoffset:0" />
       <flowRoot
          transform="matrix(0.89438907,0,0,0.89438907,-11.827554,28.453922)"
          style="font-style:normal;font-weight:normal;font-size:22.01241875px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -413,7 +413,7 @@
        id="g5471"
        transform="translate(9.3519417,-8.9066111)">
       <rect
-         style="opacity:1;fill:#1d67ff;fill-opacity:1;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.5999999;stroke-dashoffset:0"
+         style="opacity:1;fill:#1e96ff;fill-opacity:1;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.59999990000000030;stroke-dashoffset:0"
          id="rect4140-4-9"
          width="39.399628"
          height="43.396694"
@@ -469,7 +469,7 @@
          height="81.695122"
          width="74.17057"
          id="rect4140-0"
-         style="opacity:1;fill:#1d67ff;fill-opacity:1;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.5999999;stroke-dashoffset:0" />
+         style="opacity:1;fill:#1e96ff;fill-opacity:1;stroke-width:2.79999995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:12.5;stroke-dasharray:2.79999995, 5.59999990000000030;stroke-dashoffset:0" />
       <flowRoot
          transform="matrix(0.89167037,0,0,0.89167037,-16.162631,29.526764)"
          style="font-style:normal;font-weight:normal;font-size:22.5px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
