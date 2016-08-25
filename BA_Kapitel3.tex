@@ -2,9 +2,15 @@
 	\label{Theorie}
 \section{Modellierung der Anlagentopologie}
 	\label{Graph_Anlage}
-	Zur Berechnung eines Weges innerhalb der Anlage wird zunächst die Topologie der besagten Anlage benötigt. Für die Funktionsweise der \ac{FTF} wurde definiert, dass sich alle Fahrzeuge mittels optischer Merkmale auf einer definierten Teilstrecke bewegen. Zudem soll es den Fahrzeugen nur an festgelegten Entscheidungspunkten möglich sein, ihren Fahrzustand zu ändern und eine andere Teilstrecke auszuwählen. Dies bedeutet, dass alle Fahrzeuge, sobald sie sich für eine Teilstrecke entschieden haben, dieser bis zum nächsten Entscheidungspunkt folgen. Auf Basis einer solchen logischen Unterteilung der Anlage in Entscheidungspunkte und Teilstrecken als Verbindungen zwischen zwei solcher Punkte, liegt es nahe als Datenstruktur für die Modellierung der Anlagentopologie einen Graphen zu verwenden. Die Entscheidungspunkte entsprechen hierbei den Knoten und die korrespondierenden Teilwegstrecken stellen die Kanten des Graphen dar. Da sich die \ac{FTF} möglichst frei durch die Produktion bewegen sollen, wird als Grundform der Anlage ein ungerichteter Graph zur Abbildung der Topologie verwendet, jedoch soll es für die spätere Wegberechnung unerheblich sein, ob es sich um einen gerichteten oder ungerichteten Graphen handelt.\\
-	\textbf{insert graphic about graphs here}
-	\\[4pt]
+	Zur Berechnung eines Weges innerhalb der Anlage wird zunächst die Topologie der besagten Anlage benötigt. Für die Funktionsweise der \ac{FTF} wurde definiert, dass sich alle Fahrzeuge mittels optischer Merkmale auf einer definierten Teilstrecke bewegen. Zudem soll es den Fahrzeugen nur an festgelegten Entscheidungspunkten möglich sein, ihren Fahrzustand zu ändern und eine andere Teilstrecke auszuwählen. Dies bedeutet, dass alle Fahrzeuge, sobald sie sich für eine Teilstrecke entschieden haben, dieser bis zum nächsten Entscheidungspunkt folgen. Auf Basis einer solchen logischen Unterteilung der Anlage in Entscheidungspunkte und Teilstrecken als Verbindungen zwischen zwei solcher Punkte, liegt es nahe als Datenstruktur für die Modellierung der Anlagentopologie einen Graphen zu verwenden. Die Entscheidungspunkte entsprechen hierbei den Knoten, die korrespondierenden Teilwegstrecken stellen die Kanten des Graphen dar, mit beispielsweise dem Abstand als Gewichtung. Da sich die \ac{FTF} möglichst frei durch die Produktion bewegen sollen, wird als Grundform der Anlage ein ungerichteter Graph zur Abbildung der Topologie verwendet, jedoch soll es für die spätere Wegberechnung unerheblich sein, um welche Art von Graphen es sich handelt. Abbildung \ref{GraphenUebersicht} zeigt den Unterschied zwischen gerichteten und ungerichteten Graphen. Bei einem gerichteten Graphen kann ein Nachbarknoten nur entlang der angegebenen Kantenrichtung erreicht werden, bei ungerichteten Graphen ist ein Nachbarknoten über jede Verbindungskante erreichbar.
+
+	\begin{figure}
+		\centering
+		\includegraphics[scale=0.6]{/Bilder/UebersichtGraphenPDF}
+		\vspace{0.2cm}
+		\caption{Beispiel für ungerichtete und gerichtete Graphen mit Kantengewichtungen.}\label{GraphenUebersicht}
+	\end{figure}
+
 	Da der Graph die Abbildung einer realen Anlage ist, kann zudem ausgeschlossen werden, dass die Gewichtung der Kanten negativ ist, da dies je nach Art der Gewichtung nur wenig Nutzen bringen würde. Es existieren beispielsweise keine negativen Streckenabstände oder Fahrzeiten, die eine spezielle Betrachtung erforderlich machen und somit die Wahl der Wegfindungsalgorithmen einschränken würden.
 	
 \section{Auswahl der Algorithmen}
@@ -129,13 +135,66 @@
 			\end{minipage}
 		\end{center}
 	\subsection{Darstellung der Funktionsweise}
-		Die \textbf{insert graphic here} zeigt die Funktionsweise des Algorithmus an einem einfachen Beispielgraphen mit vier Knoten.
-	
+		Im Folgenden soll kurz die Funktionsweise des Algorithmus an einem einfachen Beispielgraphen mit vier Knoten gezeigt werden. Es soll der kürzeste Weg von Knoten 1 zu Knoten 3 gefunden werden.\\[4pt]
+		Im ersten Schritt wird der Startknoten betrachtet. Für alle vom Startknoten erreichbare Knoten wird die Länge der bisher gefundenen kürzesten Route vom Start zu diesem Knoten notiert. In Abbildung \ref{Dijkstra1} wird dies durch die roten Zahlen neben den entsprechenden Knoten dargestellt Da bisher nur der Startknoten betrachtet wurde entsprechen die kürzesten Wege den Kantengewichtungen der jeweiligen Verbindungskanten zu 2 und 4. Der Vorgängerknoten entlang der kürzesten Route wird durch einen Pfeil markiert:
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/Dijkstra1PDF}
+			\vspace{0.2cm}
+			\caption{Dijkstra - Erster Schritt: Notation der kürzesten Routen. }\label{Dijkstra1}
+		\end{figure}
+		
+		Da der Startknoten nun vollständig betrachtet wurde, wird er geschlossen und als nächstes der Knoten 4 betrachtet, da dieser die kürzeste bisher gefundene Route besitzt. Diese folgt aus $\hat{f}(Knoten 4)=4+0=4$ mit der Bedingung $\hat{h}(Knoten 4) = 0$ aus Abschnitt \ref{Abschaetz} für den Dijkstra-Algorithmus. Dadurch ist nun eine Route zum Ziel bekannt und kann neben dem Knoten 3 notiert werden. Da diese aber nicht zwingend die Kürzeste ist, muss der Algorithmus weiter ausgeführt werden. Zum Knoten 2 wurde beispielsweise über 4 eine kürzere Route als die bisher bekannte gefunden. Diese wird notiert und die Vorgängerpfeile werden wir in Abbildung \ref{Dijkstra2} dargestellt abgeändert:
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/Dijkstra2PDF}
+			\vspace{0.2cm}
+			\caption{Dijkstra - Zweiter Schritt: Betrachten des Knotens mit dem bisherigen kürzesten Pfad. Update der anderen Knoten.}\label{Dijkstra2}
+		\end{figure}
+		
+		Als nächstes wird Knoten 4 geschlossen und Knoten 2 betrachtet, da der kürzeste Pfad zu 2 mit dem Wert 5 kleiner ist als der zum Zielknoten mit dem Wert 9. Dadurch wird ein neuer kürzester Pfad zum Ziel erkannt der den Knoten 2 enthält:
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/Dijkstra3PDF}
+			\vspace{0.2cm}
+			\caption{Dijkstra - Dritter Schritt: Expandieren des Knoten 2.}\label{Dijkstra3}
+		\end{figure}
+		
+		Da nach dem schließen von Knoten 2 nur noch der Zielknoten 3 übrig bleibt kann dieser somit auf geschlossen werden. Wurde der Zielknoten geschlossen, so beendet sich der Algorithmus und der kürzeste Pfad kann wie in Abbildung \ref{Dijkstra4} durch die Rückverfolgung  der Pfeile ausgehend vom Ziel bestimmt werden:
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/Dijkstra4PDF}
+			\vspace{0.2cm}
+			\caption{Dijkstra -Vierter Schritt: Rückverfolgung der Route nach Schließung des Zielknotens.}\label{Dijkstra4}
+		\end{figure}
+			
 	\subsection{Berechnungsaufwand}
-		Der Berechnungsaufwand des Dijkstra-Algorithmus beträgt in Landau-Notation vereinfacht $\mathcal{O}(\lvert \mathcal{V}\rvert ^2)$, beziehungsweise $\mathcal{O}(\lvert \mathcal{V}\rvert  \log \lvert \mathcal{V}\rvert + \lvert \mathcal{E}\rvert) $ bei der Implementierung mittels Fibonacci-Heaps \cite{Fredman1984}, wobei  $\lvert \mathcal{V}\rvert$ gleich der Anzahl der Knoten  und $\lvert \mathcal{E}\rvert$ gleich der Anzahl der Kanten des Graphen ist. Diese Vereinfachung gilt jedoch nur, wenn die Anzahl der Kanten in der gleichen Größenordnung liegt wie die Anzahl der Knoten, also beispielsweise nicht für vollständige graphen, für die gilt $\lvert \mathcal{E}\rvert =\mathcal{O}(\lvert \mathcal{V}\rvert ^2)$.
+		Der Berechnungsaufwand des Dijkstra-Algorithmus beträgt in Landau-Notation vereinfacht $\mathcal{O}(\lvert \mathcal{V}\rvert ^2)$, beziehungsweise $\mathcal{O}(\lvert \mathcal{V}\rvert  \log \lvert \mathcal{V}\rvert + \lvert \mathcal{E}\rvert) $ bei der Implementierung mittels Fibonacci-Heaps \cite{Fredman1984}, wobei  $\lvert \mathcal{V}\rvert$ gleich der Anzahl der Knoten  und $\lvert \mathcal{E}\rvert$ gleich der Anzahl der Kanten des Graphen ist. Diese Vereinfachung gilt jedoch nur, wenn die Anzahl der Kanten in der gleichen Größenordnung liegt wie die Anzahl der Knoten, also beispielsweise nicht für vollständige Graphen, für die gilt $\lvert \mathcal{E}\rvert =\mathcal{O}(\lvert \mathcal{V}\rvert ^2)$.
 	
 \section{A*-Algorithmus}
-	Der zweite verwendete Algorithmus für die Wegfindung ist der sogenannte A*-Algorithmus. Dieser ist eine Weiterentwicklung des in \ref{Dijkstra_Alg} vorgestellten Dijkstra-Algorithmus. Der grundlegende Unterschied ist jedoch, dass bei A* eine andere Bewertung der Betrachtungsreihenfolge von Knoten bei der Berechnung verwendet werden. Dies bedeutet, dass diejenigen Knoten und Kanten zuerst expandiert werden sollen, bei denen die Wahrscheinlichkeit höher ist, das sie Teil des kürzesten Pfades zum Zielknoten sind. Im Vergleich dazu wurde beim Dijkstra-Algorithmus immer genau der Knoten aus B als nächstes expandiert, der den kürzesten Abstand zu dem Startknoten hatte\textbf{Insert graphic dijkstra vs A*}. Um eine Abschätzung der Wahrscheinlichkeit eines Knotens bezüglich seiner Zugehörigkeit zu dem  kürzesten Pfad vom Start zum Zielknoten treffen zu können, werden somit zusätzliche Informationen über die Beziehung zwischen einzelnen Knoten und dem Zielknoten benötigt. Diese Bewertung von Knoten ist die im Abschnitt \ref{Abschaetz} vorgestellte Heuristik bezeichnet. Mittels dieser Bewertung kann nun bereits vor Erreichen des Zielknotens eine Aussage über die Länge der Route gemacht werden. 
+	Der zweite verwendete Algorithmus für die Wegfindung ist der sogenannte A*-Algorithmus. Dieser ist eine Weiterentwicklung des in \ref{Dijkstra_Alg} vorgestellten Dijkstra-Algorithmus. Der grundlegende Unterschied ist jedoch, dass bei A* eine andere Bewertung der Betrachtungsreihenfolge von Knoten bei der Berechnung verwendet werden. Dies bedeutet, dass diejenigen Knoten und Kanten zuerst expandiert werden sollen, bei denen die Wahrscheinlichkeit höher ist, das sie Teil des kürzesten Pfades zum Zielknoten sind. Im Vergleich dazu wurde beim Dijkstra-Algorithmus immer genau der Knoten aus B als nächstes expandiert, der den kürzesten Abstand zu dem Startknoten hatte. Die Abbildung \ref{DijkstraVsA*} zeigt den Einfluss der Entscheidungsfunktion $f(n)$ bei der Auswahl des ersten betrachteten Knotens. Bei dem Dijkstra-Algorithmus wird zuerst Rosenheim betrachtet, da $\hat{f}(Rosenheim)=67km<\hat{f}(Ingolstadt)=78km$ ist. Der Dijkstra-Algorithmus berücksichtigt somit nicht, dass Ingolstadt näher am Ziel Regensburg liegt und somit der kürzeste Pfad wahrscheinlich über Ingolstadt verläuft. Beim A*-Algorithmus wird diese Zusatzinformation in Form der Luftlinie zum Ziel hier im Beispiel mit berücksichtigt.
+	Somit gilt hier:
+	\begin{equation}
+		\hat{f}(Ingolstadt)=s(Ingolstadt)+\hat{h}(Ingolstadt)=78km+57km=135km
+	\end{equation}
+	Der Wert der Entscheidungsfunktion kann für Rosenheim wie folgt bestimmt werden:
+	\begin{equation}
+		\hat{f}(Rosenheim)=s(Rosenheim)+\hat{h}(Rosenheim)=67km+129km=196km
+	\end{equation}
+	Aus diesem Grund wird zuerst Knoten Ingolstadt betrachtet, da $\hat{f}(Ingolstadt)<\hat{f}(Rosenheim)$ ist.
+	
+	\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{/Bilder/DijkstraVsAStarPDF}
+	\vspace{0.2cm}
+	\caption{Vergleich des ersten betrachteten Knotens beim Dijkstra- und A*-Algorithmus am Beispiel des kürzesten Pfades von München nach Regensburg. Heuristik und Kantengewichte sind realen Weglängen gemäß \cite{Luftlinie}.} \label{DijkstraVsA*}
+	\end{figure}
+	
+	Um eine Abschätzung der Wahrscheinlichkeit eines Knotens bezüglich seiner Zugehörigkeit zu dem  kürzesten Pfad vom Start zum Zielknoten treffen zu können, werden somit zusätzliche Informationen über die Beziehung zwischen einzelnen Knoten und dem Zielknoten benötigt. Diese Bewertung von Knoten ist die im Abschnitt \ref{Abschaetz} vorgestellte Heuristik. Mittels dieser Bewertung kann nun bereits vor Erreichen des Zielknotens eine Aussage über die Länge der Route gemacht werden. 
 	
 	\subsection{Grundprinzip}
 		\label{A*-Alg}
@@ -181,9 +240,34 @@
 		Anhand der vorgestellten Eigenschaften der Heuristik wird erkennbar, das der A*-Algorithmus durch die Modifizierung der Heuristikberechnung an die gegebenen Anforderungen anpassbar ist. Anstatt einer genauen, aber langsamen Pfadberechnung, kann auf Kosten der Genauigkeit auch schnell ein möglicherweise nicht optimaler Weg zum Ziel gefunden werden. Zudem kann durch perfektes Wissen der Topologie der Anlage in kürzester Zeit der kürzeste Weg ermittelt werden.
 	
 	\subsection{Darstellung der Funktionsweise}
-		Anhand eines einfachen Beispiels soll jetzt die Funktionsweise des A*-Algorithmus dargestellt werden. Die Knoten des folgenden Graphen sollen Städte darstellen und die Kanten geben die Verbindungen durch Schnellstraßen oder Autobahnen wieder. Die Gewichtungen der Kanten stellen in diesem Beispiel die Entfernungen zwischen den Städten dar. Als Heuristik wurde hier die Entfernung in Luftlinie zwischen den jeweiligen Städten und der Zielstadt gewählt, da diese die Luftlinie immer kürzer\footnote{oder im Extremfall gleich lang.} ist als eine Straße zwischen den Städten und somit die Bedingung $\hat{h}(n)\le h(n)$ erfüllt ist:
-		\\ \textbf{insert graphic here} 
+		Anhand des Beispiels aus Abbildung \ref{DijkstraVsA*} soll jetzt die Funktionsweise des A*-Algorithmus dargestellt werden. Die Knoten des Graphen stellen die Städte dar, die Kanten spiegeln Verbindungen  durch Schnellstraßen oder Autobahnen wieder. Die Gewichtungen der Kanten ist in diesem Beispiel die wirkliche Entfernung der Städte gemäß \cite{Luftlinie}. Auch als Heuristik wurde hier die Entfernung in Luftlinie zwischen den jeweiligen Städten und der Zielstadt gemäß \cite{Luftlinie} gewählt, da die Luftlinie immer kürzer\footnote{oder im Extremfall gleich lang.} ist als eine Straße zwischen den Städten und somit die Bedingung $\hat{h}(n)\le h(n)$ erfüllt ist. Ausgangspunkt ist der erste Schritt des Algorithmus, der bereits in Abbildung \ref{DijkstraVsA*} dargestellt wurde:  
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/AStar1PDF}
+			\vspace{0.2cm}
+			\caption{A* - Erster Schritt: Betrachtung des Ersten Knotens.}
+		\end{figure}
+		
+		Als nächster Schritt wird $\hat{f}(Regensburg)$ bestimmt, um entscheiden zu können ob zuerst Rosenheim oder Regensburg expandiert werden muss. Die Schwarze Ziffer über dem geschlossenen Knoten Ingolstadt ist der  Wert des kürzesten Pfades $s(Ingolstadt)$ von München nach Ingolstadt. Da Regensburg von sich selbst 0km entfernt ist, hat die Entscheidungsfunktion $f(Regensburg)=s(Regensburg)$ den Wert $s(Ingolstadt)+74km=152km$:
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/AStar2PDF}
+			\vspace{0.2cm}
+			\caption{A* - Zweiter Schritt: Hinzufügen von Regensburg zur Open-List.}
+		\end{figure}
+		
+		Als nächstes wird der Knoten mit dem kleinsten Wert  für $\hat{f}(n)$ ausgewählt. Da $\hat{f}(Regensburg)<\hat{f}(Rosenheim)$ wird als nächstes der Knoten Regensburg betrachtet. Da nur noch Rosenheim übrig bleibt und der ein Pfad über Rosenheim sicher länger ist\footnote{durch die Heuristik wurd immer unterschätzt, also ist $f(Rosenheim)$ sicher größer als $\hat{f}(Rosenheim)$}, existiert kein kürzerer Pfad nach Regensburg mehr und der Zielknoten kann geschlossen werden:
 
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{/Bilder/AStar3PDF}
+			\vspace{0.2cm}
+			\caption{A* - Dritter Schritt: Hinzufügen des Zielknotens zur Closed-List und Bestimmung des kürzesten Pfads} \label{A*3}
+		\end{figure}
+		
+		Wie beim Dijkstra-Algorithmus kann nun durch Rückverfolgung der Vorgängerpfeile vom Ziel- zum Startknoten der kürzeste Pfad bestimmt werden. In Abbildung \ref{A*3} ist erkennbar, das der Knoten Rosenheim vom A*-Algorithmus nicht betrachtet wurde, obwohl er beim Dijkstra-Algorithmus in Abbildung \ref{DijkstraVsA*} als erster Knoten betrachtet wurde. Hierdurch ist erkennbar, dass je nach Qualität der Heuristik weniger Knoten betrachtet werden müssen, als dies bei Dijkstra der Fall wäre.
 	
 	\subsection{Berechnungsaufwand}
 		\label{Aufwand_A*}
