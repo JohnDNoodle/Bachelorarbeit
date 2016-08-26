@@ -52,7 +52,7 @@
 			
 		\end{longtable}
 		
-		Der Dijkstra-Algorithmus ist aufgrund seiner langen Berechnungszeit ungeeignet, für die Wegfindung im laufenden Betrieb der \ac{FTF} jedoch kann ausgenutzt werden, dass bei der Berechnung des kürzesten Pfades via Dijkstra die Abstände aller besuchten Knoten zum Startknoten ermittelt werden. Diese Abstände bilden die Basis zur Verbesserung der bei einem der anderen Algorithmen genutzten Heuristiken. Die Algorithmen \ac{MA*}, \ac{RTA*} und \ac{D*} sind alle Weiterentwicklungen des A*-Algorithmus. Die zu entwickelnde Modellanlage besitzt im vorliegenden Fall nur eine begrenzte Anzahl von Knoten. Dadurch ist der Nachteil des hohen Speicherbedarfs des Grundalgorithmus A* hier vernachlässigbar und der zusätzliche Aufwand für die Implementierung von \ac{MA*} kann zunächst ignoriert werden. Bei realen Anlagen mit einer höheren Anzahl an Knoten muss jedoch im Einzelfall betrachtet werden, ob eine Steuerung mit größerem Arbeitsspeicher oder die Implementierung des \ac{MA*}-Algorithmus notwendig ist. Der \ac{D*}-Algorithmus wurde wegen seiner höheren Komplexität und der Beschränkungen durch die Programmierumgebung nicht implementiert. Als zyklischer Wegfindungsalgorithmus wurde eine Mischform des A*-Algorithmus mit Planungs- und Ausführungsaspekten ähnlich denen von \ac{RTA*} verwendet, indem in regelmäßigen Abständen der bisher gefundene Teilweg verifiziert und bei Bedarf neu berechnet wird. Die verwendeten Algorithmen sollen nun etwas näher betrachtet werden.
+		Der Dijkstra-Algorithmus ist aufgrund seiner langen Berechnungszeit ungeeignet, für die Wegfindung im laufenden Betrieb der \ac{FTF} jedoch kann ausgenutzt werden, dass bei der Berechnung des kürzesten Pfades via Dijkstra die Abstände aller besuchten Knoten zum Startknoten ermittelt werden. Diese Abstände bilden die Basis zur Verbesserung der bei einem der anderen Algorithmen genutzten Heuristiken. Die Algorithmen \ac{MA*}, \ac{RTA*} und \ac{D*} sind alle Weiterentwicklungen des A*-Algorithmus. Die zu entwickelnde Modellanlage besitzt im vorliegenden Fall nur eine begrenzte Anzahl von Knoten. Dadurch ist der Nachteil des hohen Speicherbedarfs des Grundalgorithmus A* hier vernachlässigbar und der zusätzliche Aufwand für die Implementierung von \ac{MA*} kann zunächst vermieden  werden. Bei realen Anlagen mit einer höheren Anzahl an Knoten muss jedoch im Einzelfall betrachtet werden, ob eine Steuerung mit größerem Arbeitsspeicher oder die Implementierung des \ac{MA*}-Algorithmus notwendig ist. Der \ac{D*}-Algorithmus wurde wegen seiner höheren Komplexität und der Beschränkungen durch die Programmierumgebung nicht implementiert. Als zyklischer Wegfindungsalgorithmus wurde eine Mischform des A*-Algorithmus mit Planungs- und Ausführungsaspekten ähnlich denen von \ac{RTA*} verwendet, indem in regelmäßigen Abständen der bisher gefundene Teilweg verifiziert und bei Bedarf neu berechnet wird. Die verwendeten Algorithmen sollen nun etwas näher betrachtet werden.
 
 \section{Gemeinsamkeiten der Algorithmen}
 
@@ -85,7 +85,7 @@
 		
 		\begin{itemize}
 			\item \textit{Seien $s$, $n$ und $z$ beliebige Knoten des Graphen $G$, wobei $s$ der Startknoten und $z$ der Zielknoten für die Ermittlung des kürzesten Weges von $s$ zu $z$ sind.}\\
-			\item \textit{Sei $f(n)$ der Wert eines kürzesten Pfades vom Knoten $s$ zum Knoten $z$, der zusätzlich den Knoten $n$ enthält.}
+			\item \textit{Sei $f(n)$ die Summe der Kantengewichte eines kürzesten Pfades vom Knoten $s$ zum Knoten $z$, der zusätzlich den Knoten $n$ enthält.}
 		\end{itemize}
 		
 		Es sei zunächst nicht bekannt, ob der Knoten $n$ auch auf dem kürzesten Pfad von $s$ nach $z$ liegt.
@@ -99,9 +99,15 @@
 			\hat{f}(n)=\hat{g}(n)+\hat{h}(n)
 		\end{equation}
 	
-		Man geht zunächst davon aus, dass sich $n$ in der Klasse B befindet. $s$ befindet sich per Definition des Startknotens bereits in A, da die Entfernung von $s$ zu $s$ gleich null ist. Gemäß der Definition der Klasse B existiert somit mindestens ein Knoten $k_i$ aus der Klasse A, der durch eine Kante mit dem Knoten $n$ verbunden ist und für den der $g(k_i)$ bereits bestimmt wurde\footnote{dies ist durch die Definition von A gegeben.}. Sei $v_{k_i,n}$ die Gewichtung der Verbindungskante des Knotens $k_i$ nach $n$, so kann der exakte Wert für $g(n)$ wie folgt bestimmt werden:
+		Man geht zunächst davon aus, dass sich $n$ in der Klasse B befindet. $s$ befindet sich per Definition des Startknotens bereits in A, da die Entfernung von $s$ zu $s$ gleich null ist. Gemäß der Definition der Klasse B existiert somit mindestens ein Knoten $k_i$ aus der Klasse A, der durch eine Kante mit dem Knoten $n$ verbunden ist und für den $g(k_i)$ bereits bestimmt wurde\footnote{dies ist durch die Definition der Klasse A gegeben.}.
+		\begin{itemize}
+			\item \textit{Sei $M=\{k\in V(G)\mid$ k ist direkter Nachbar von n$\} \cap A$}
+			\item \textit{Sei $k_i=argmin\{v_{k,n},k\in M\}$}
+		\end{itemize}
+		 So gilt
+		%Sei $v_{k_i,n}$ die Gewichtung der Verbindungskante des Knotens $k_i$ nach $n$, so kann der exakte Wert für $g(n)$ wie folgt bestimmt werden:
 		\begin{equation}
-			\hat{g}(n)=g(k_i)+min(v_{k_i,n})=g(n)
+			g(n)=g(k_i)+v_{k_i,n}
 		\end{equation}
 		
 		Dadurch kann der exakte Wert für $g(n)$ bestimmt werden. Die Kante mit der kleinsten Gewichtung, die den Knoten $n$ mit einem Knoten $k_i$ aus A verbindet, gehört zu der in Abschnitt \ref{Klassifizierung} definierten Klasse II.\\
@@ -124,19 +130,19 @@
 			\begin{minipage}{0.8\linewidth}
 
 				\begin{enumerate}
-					\item Man betrachte alle Kanten \textit{z} die den soeben zu A hinzugefügten Knoten mit einem Knoten \textit{K} aus B oder C verbinden. 
+					\item Man betrachte alle Kanten \textit{e} die den soeben zu A hinzugefügten Knoten mit einem Knoten \textit{k} aus B oder C verbinden. 
 					\begin{itemize}
-						\item Gehört \textit{K} bereits zur Gruppe B, so wird untersucht ob die Kante \textit{z} zu einem kürzeren Pfad zu \textit{K} führt, als der bisher gefundene kürzeste Pfad. Ist dies der Fall, so ersetzt \textit{z} die korrespondierende Kante aus II. Die Kante die durch \textit{z} ersetzt wird, wird wieder zur Gruppe III hinzugefügt.
-						\item Gehört \textit{K} zur Gruppe  C, so wird \textit{K} zu B und \textit{z} zu II hinzugefügt.
+						\item Gehört \textit{k} bereits zur Gruppe B, so wird untersucht ob die Kante \textit{e} zu einem kürzeren Pfad zu \textit{k} führt, als der bisher gefundene kürzeste Pfad. Ist dies der Fall, so ersetzt \textit{e} die korrespondierende Kante aus II. Die Kante die durch \textit{e} ersetzt wird, wird wieder zur Gruppe III hinzugefügt.
+						\item Gehört \textit{k} zur Gruppe  C, so wird \textit{k} zu B und \textit{e} zu II hinzugefügt.
 					\end{itemize}
-					\item Es wird die in Abschnitt \ref{Abschaetz} vorgestellte Funktion $f(n)$ verwendet, um genau den Knoten $B_i$ in der Klasse B zu finden, der den kleinsten Wert für $f(B_i)$ besitzt. Da bei dem Dijkstra-Algorithmus $\hat{h}(n)$ gleich null ist, wird genau der Knoten  $B_i$ ausgewählt, für den $g(B_i)$ den kleinsten Wert hat, der also von den offenen Knoten den kleinsten Abstand zum Startknoten hat. Die zu $B_i$ gehörende Kante aus II wechselt damit in die Klasse I.
+					\item Es wird die in Abschnitt \ref{Abschaetz} vorgestellte Funktion $f(n)$ verwendet, um genau den Knoten $b_i$ in der Klasse B zu finden, der den kleinsten Wert für $f(b_i)$ besitzt. Da bei dem Dijkstra-Algorithmus $\hat{h}(n)$ gleich Null ist, wird genau der Knoten  $b_i$ ausgewählt, für den $g(b_i)$ den kleinsten Wert hat, der also von den offenen Knoten den kleinsten Abstand zum Startknoten hat. Die zu $b_i$ gehörende Kante  aus II wechselt damit in die Klasse I.
 				\end{enumerate}
 				
 			\end{minipage}
 		\end{center}
 	\subsection{Darstellung der Funktionsweise}
 		Im Folgenden soll kurz die Funktionsweise des Algorithmus an einem einfachen Beispielgraphen mit vier Knoten gezeigt werden. Es soll der kürzeste Weg von Knoten 1 zu Knoten 3 gefunden werden.\\[4pt]
-		Im ersten Schritt wird der Startknoten betrachtet. Für alle vom Startknoten erreichbare Knoten wird die Länge der bisher gefundenen kürzesten Route vom Start zu diesem Knoten notiert. In Abbildung \ref{Dijkstra1} wird dies durch die roten Zahlen neben den entsprechenden Knoten dargestellt Da bisher nur der Startknoten betrachtet wurde entsprechen die kürzesten Wege den Kantengewichtungen der jeweiligen Verbindungskanten zu 2 und 4. Der Vorgängerknoten entlang der kürzesten Route wird durch einen Pfeil markiert:
+		Im ersten Schritt wird der Startknoten betrachtet. Für alle vom Startknoten erreichbare Knoten wird die Länge der bisher gefundenen kürzesten Route vom Start zu diesem Knoten notiert. In Abbildung \ref{Dijkstra1} wird dies durch die roten Zahlen neben den entsprechenden Knoten dargestellt. Dieser Wert entspricht genau dem Wert $g(n)$ wenn $n$ den jeweiligen Knoten bezeichnet. Da bisher nur der Startknoten betrachtet wurde entsprechen die kürzesten Wege den Kantengewichtungen der jeweiligen Verbindungskanten zu 2 und 4. Der Vorgängerknoten entlang der kürzesten Route wird durch einen roten Pfeil markiert:
 		
 		\begin{figure}[H]
 			\centering
