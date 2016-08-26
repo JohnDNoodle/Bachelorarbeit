@@ -31,7 +31,7 @@
 			\centering
 			\includegraphics[scale=0.8]{/Bilder/TIA_InterfaceDBAusgehend}
 			\vspace{0.2cm}
-			\caption{Aufbau des Schnittstellen-\ac{DB} für ausgehende Kommunikationsverbindungen.}\label{InterfaceDB}
+			\caption{Aufbau Schnittstellen-\ac{DB} für ausgehende Kommunikationsverbindungen.}\label{InterfaceDB}
 		\end{figure}
 
 		Der Schnittstellen-DB für die eingehende Kommunikation besitzt analog zum Ausgehenden zwei Datenbereiche für interne und externe Kommunikation, wobei hier beide als Byte-Arrays realisiert sind. Im Unterschied zum vorherigen \ac{DB} enthält dieser zwei getrennte Signalisierungsmerker für intern und extern erhaltene Daten. Der Grund hierfür ist die zeitliche Staffelung der beiden Kommunikationsarten, die in Abschnitt \ref{Anpassung Kommunikation} näher erläutert wird.
@@ -126,7 +126,7 @@
 			\centering
 			\includegraphics[scale=0.8]{/Bilder/SpaceTimeMatrixPDF}
 			\vspace{0.2cm}
-			\caption{Dreidimensionale Matrix mit Reservierung von Knoten  zu bestimmten Zeitpunkten entlang einer Route. Angelehnt an \cite{Silver2005}.}\label{SpaceTimeMatrix}
+			\caption{Dreidimensionale Matrix mit Reservierung von Knoten zu bestimmten Zeitpunkten entlang einer Route. Angelehnt an \cite{Silver2005}.}\label{SpaceTimeMatrix}
 		\end{figure}
 		
 		In der hier realisierten Modellanlage ist diese Vorgehensweise jedoch nur begrenzt anwendbar. Da die Wegberechnung auf die einzelnen Fahrzeuge verteilt ist und nicht zentral gesammelt durchgeführt wird, müsste jedes Fahrzeug immer seine komplette Teilroute allen Anderen mitteilen. Dies ist theoretisch möglich, würde aber die Kommunikationslast deutlich erhöhen somit die Skalierbarkeit der Anlage verschlechtern.

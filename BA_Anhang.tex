@@ -7,8 +7,14 @@
 	\addcontentsline{toc}{section}{Literaturverzeichnis}
 	\bibliographystyle{ieeetr}
 	\bibliography{Sources}
+		
 	\clearpage
-	\addcontentsline{toc}{section}{Abbildungsverzeichnis}
-	\clearpage
+	\phantomsection
+	\addcontentsline{toc}{section}{\listfigurename}
+	\listoffigures
 	
+	\clearpage
+	\phantomsection
+	\addcontentsline{toc}{section}{\listtablename}
+	\listoftables
 	
