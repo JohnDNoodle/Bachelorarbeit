@@ -2,7 +2,7 @@
 	\label{Implementierung}
 	\section{Kurze Einführung in die Programmiersprache und Programmierumgebung}
 	
-		Für die Implementierung der Wegfindung wurde im Abschnitt \ref{Aufgabenstellung_Pathfinding} definiert, dass diese auf einer Siemens \ac{SPS} (englisch: \ac{PLC})  der S7-1200er Reihe lauffähig sein muss. Bei der 1200er Reihe handelt es sich um  Steuerungen des niedrigen Leistungssegments. Für die Projektierung und Programmierung von Anlagen mit Steuerungen dieser Art wird eine proprietäre Entwicklungsumgebung namens \ac{TIA-Portal} von Siemens zur Verfügung gestellt.
+		Für die Implementierung der Wegfindung wurde im Abschnitt \ref{Aufgabenstellung_Pathfinding} definiert, dass diese auf einer Siemens \ac{SPS} (englisch: \acl{PLC})  der S7-1200er Reihe lauffähig sein muss. Bei der 1200er Reihe handelt es sich um  Steuerungen des niedrigen Leistungssegments. Für die Projektierung und Programmierung von Anlagen mit Steuerungen dieser Art wird eine proprietäre Entwicklungsumgebung namens \ac{TIA-Portal} von Siemens zur Verfügung gestellt.
 		
 		\subsection{Siemens TIA-Portal}
 		
@@ -123,7 +123,7 @@
 				\centering
 				\includegraphics[scale=0.7]{/Bilder/TIA_AdjazenzmatrixDatentyp}
 				\vspace{0.2cm}
-				\caption{Definition des Datentyps für die Adjazenzmatrix in \ac{STEP7}}
+				\caption{Ausschnitt aus der Definition des Datentyps für die $n\times n$ Adjazenzmatrix in \ac{STEP7}}
 			\end{figure}
 
 	\section{Implementierung der Algorithmen}
@@ -189,7 +189,7 @@
 			
 		\subsection{Dijkstra-Algorithmus und Heuristik-Tabelle}
 			
-			Die eigentliche Implementierung des Dijkstra-Algorithmus ist recht einfach. Zunächst muss die Prioritätsschlange mit allen Knoten der Anlage gefüllt\footnote{Gruppen II und III aus Abschnitt \ref{Dijkstra_Alg} werden gemeinsam in der Prioritätsschlange gehalten.} und die Distanz des Startknotens auf null gesetzt werden. 
+			Die eigentliche Implementierung des Dijkstra-Algorithmus ist recht einfach. Zunächst muss die Prioritätsschlange mit allen Knoten der Anlage gefüllt\footnote{Klasse B und C aus Abschnitt \ref{Klassifizierung} werden gemeinsam in der Prioritätsschlange gehalten.} und die Distanz des Startknotens auf Null gesetzt werden. 
 			Da hier keine Route gesucht wird sondern nur ein Abstand zum Startknoten, wird der Algorithmus nicht beendet wenn ein bestimmter Zielknoten erreicht wurde, sondern erst wenn alle Knoten betrachtet worden sind. Bereits betrachtete Knoten werden gemäß des in Abschnitt \ref{Dijkstra_Alg} beschriebenen Prinzips aus der Priority-Queue in eine geordnete Knotenliste übertragen. Dieser, Heuristikliste genannte, Datentyp enthält die Knotenelemente aufsteigend sortiert nach Abstand zum Startknoten.
 			
 			\begin{figure}[h]
@@ -200,9 +200,7 @@
 				
 			\end{figure}
 			Der gesamte Dijkstra-Algorithmus\footnote{der Programmcode des den Dijkstra-Algorithmus implementierenden Bausteins ist im Anhang unter \textbf{INSERT REFERENCE HERE} hinterlegt.} wird in einem \ac{FC} mit dem Namen "`FC\_createHeuristicTable"' berechnet. In diesem Baustein wird für jeden Knoten der Anlage, der als Endzielknoten\footnote{vergleiche Abschnitt \ref{Verwendung_Alg}.} markiert ist eine Heuristikliste generiert. Wie bereits erwähnt wird dieser Baustein im "`\ac{OB}100 Startup"' aufgeführt. Die generierten Heuristiken werden in einem Datentyp namens Heuristiktabelle in den Arraykomponenten gespeichert und im zyklischen Betrieb von dem A*-Algorithmus verwendet. 
-			\\
-			\\
-			\textbf{Notiz: Bausteine näher beschreiben? mit Auflistung und Erklärung aller Schnittstellen?}
+		
 			
 
 		\subsection{A*-Algorithmus}
@@ -229,7 +227,7 @@
 	
 		\subsection{Ausführung bei Systemstart}
 			
-			Wie bereits mehrfach erwähnt wird die Heuristiktabelle beim Hochfahren der CPU generiert. Eigentlich ist es nicht notwendig für den A*-Algorithmus, dass bereits ein Wert für die Heuristik existiert. Es könnte auch im zyklischen Betrieb ein Wert für die Entscheidungsfunktion $f(n)$ aus Abschnitt \ref{Heuristik} berechnet werden, beispielsweise mittels einer Funktion für die Manhattan-Distanz, welche den Abstand zweier Knoten anhand der Differenz derer Koordinaten ermittelt. Dies würde den Speicherverbrauch erheblich reduzieren, da keine großen Tabellen gespeichert werden müssten, sondern nur die jeweiligen Koordinaten der Knotenpunkte.
+			Wie bereits erwähnt wird die Heuristiktabelle beim Hochfahren der CPU generiert. Eigentlich ist es nicht notwendig für den A*-Algorithmus, dass bereits ein Wert für die Heuristik existiert. Es könnte auch im zyklischen Betrieb ein Wert für die Entscheidungsfunktion $f(n)$ aus Abschnitt \ref{Heuristik} berechnet werden, beispielsweise mittels einer Funktion für die Manhattan-Distanz, welche den Abstand zweier Knoten anhand der Differenz derer Koordinaten ermittelt. Dies würde den Speicherverbrauch erheblich reduzieren, da keine großen Tabellen gespeichert werden müssten, sondern nur die jeweiligen Koordinaten der Knotenpunkte.
 			\\[4pt]
 			Die Berechnung einer Funktion $f(n)$ ist aber zeitintensiver als das Nachschlagen von Werten in einer Tabelle. Da der Speicherbedarf für die Tabelle der realisierten Anlage mit 25 Knoten und 10 Endzielknoten nur insgesamt 2300 Byte beträgt, fällt dies selbst bei der kleinsten Steuerung vom Typ S7-1214C mit 100kB Arbeitsspeicher kaum ins Gewicht. Zugleich kann die Laufzeit des A*-Algorithmus im zyklischen Betrieb deutlich reduziert werden, da die Tabellenheuristik mittels Dijkstra, im Gegensatz zur Manhatten-Distanz, eine exakte Heuristik liefert. Diese minimiert zusätzlic zur eingesparten Rechenzeit der Tabellenaufrufe noch die Anzahl der betrachteten Knoten.
 			\\[4pt]
@@ -237,9 +235,9 @@
 				
 		\subsection{Zyklische Ausführung}
 			\label{zyklische Auftrennung}
-			Trotz der Auslagerung der Heuristikberechnung auf die Hochlaufphase der CPU kann bei langen Routen nicht garantiert werden, das die als Ziel gesetzten 5ms für die Berechnungszeit eingehalten werden. Vor allem wenn sich die Anlage seit dem Hochfahren des Fahrzeugs stark verändert hat und somit die Heuristiktabelle keine exakten Heuristikwerte mehr liefert, müssen unter Umständen zusätzliche Knoten betrachtet werden, die nicht auf dem kürzesten Pfad vom Start- zum Zielknoten liegen. Der Aufwand für die Berechnung verschiebt sich also immer mehr in die Nähe von $\mathcal{O}(|\mathcal{V}|^2)$ wie in Abschnitt \ref{Aufwand_A*} erläutert wurde.
+			Trotz der Auslagerung der Heuristikberechnung auf die Hochlaufphase der CPU kann bei langen Routen nicht garantiert werden, dass die als Ziel gesetzten 5ms für die Berechnungszeit eingehalten werden. Vor allem wenn sich die Anlage seit dem Hochfahren des Fahrzeugs stark verändert hat und somit die Heuristiktabelle keine exakten Heuristikwerte mehr liefert, müssen unter Umständen zusätzliche Knoten betrachtet werden, die nicht auf dem kürzesten Pfad vom Start- zum Zielknoten liegen. Der Aufwand für die Berechnung verschiebt sich also immer mehr in die Nähe von $\mathcal{O}(|\mathcal{V}|^2)$ wie in Abschnitt \ref{Aufwand_A*} erläutert wurde.
 			\\[4pt]		
-			Aus diesem Grund wurde der A*-Algorithmus so implementiert, das der Zeitaufwand pro Zyklus größtenteils konstant bleibt, unabhängig von der Länge der berechneten Route. Dies wurde erreicht indem die Schleife, welche ausgeführt wird, solange das Ziel noch nicht erreicht ist, aufgetrennt und durch eine konditionale IF-Abfrage ersetzt wurde. Nach der Schleifenauftrennung wird immer nur ein Knoten pro Zyklus untersucht und gegebenenfalls seine Verbindungsknoten zur Open-List hinzugefügt. Weitere Knoten werden erst in den darauf folgenden Zyklen expandiert, wie in Abbildung \ref{Schleifenaufteilung} dargestellt ist. Dies hat zur Folge, dass zwar die Bearbeitungszeit der Wegfindung pro Zyklus sehr kurz gehalten wird, im implementierten Beispiel wird eine Zykluszeit der Wegfindungsschicht kleiner 1ms erreicht, die Zeit bis zur Berechnung einer kompletten Route wird jedoch deutlich länger. Dies ist der Fall, da zwischen zwei Bearbeitungszyklen immer die kompletten \ac{OB}s der anderen Schichten abgearbeitet werden, was ebenfalls in Abbildung \ref{Schleifenaufteilung} erkennbar ist. Dieses Problem kann aber zunächst vernachlässigt werden und wird im Abschnitt \ref{Anpassung Kommunikation} näher behandelt.
+			Aus diesem Grund wurde der A*-Algorithmus so implementiert, dass der Zeitaufwand pro Zyklus größtenteils konstant bleibt, unabhängig von der Länge der berechneten Route. Dies wurde erreicht indem die Schleife, welche ausgeführt wird, solange das Ziel noch nicht erreicht ist, aufgetrennt und durch eine konditionale IF-Abfrage ersetzt wurde. Nach der Schleifenauftrennung wird immer nur ein Knoten pro Zyklus untersucht und gegebenenfalls seine Verbindungsknoten zur Open-List hinzugefügt. Weitere Knoten werden erst in den darauf folgenden Zyklen expandiert, wie in Abbildung \ref{Schleifenaufteilung} dargestellt ist. Dies hat zur Folge, dass zwar die Bearbeitungszeit der Wegfindung pro Zyklus sehr kurz gehalten wird, im implementierten Beispiel wird eine Zykluszeit der Wegfindungsschicht kleiner 1ms erreicht, die Zeit bis zur Berechnung einer kompletten Route wird jedoch deutlich länger. Dies ist der Fall, da zwischen zwei Bearbeitungszyklen immer die kompletten \ac{OB}s der anderen Schichten abgearbeitet werden, was ebenfalls in Abbildung \ref{Schleifenaufteilung} erkennbar ist. Dieses Problem kann aber zunächst vernachlässigt werden und wird im Abschnitt \ref{Anpassung Kommunikation} näher behandelt.
 		
 			
 			\begin{figure}[h]
@@ -275,9 +273,9 @@
 				\caption{Beschreibung eines Funktionsclusters.}
 			\end{table}
 			
-			Dieses Funktionscluster ermöglicht es nun, Rezepte unabhängig von spezifischen Bearbeitungsstationen zu formulieren. Die Bearbeitungsreihenfolge eines Werkstücks kann somit ausgedrückt werden durch eine Liste aufeinanderfolgender Funktionalitäten, die ein bestimmtes Werkstück benötigt. Im Verlauf der Abarbeitung des Rezepts wählt das Fahrzeug selbst eine der im Cluster hinterlegten Stationen zur benötigten Funktionalität aus. Das Rezept muss der Wegfindungsschicht während des gesamten Bearbeitungsvorgangs zur Verfügung stehen, um die Auswahl des jeweils nächsten Routenziels zu ermöglichen. Daraus folgt, das Rezepte nach der Zuweisung zu einem Werkstück bis zum Abarbeitungsende gespeichert werden müssen.
+			Dieses Funktionscluster ermöglicht es nun, Rezepte unabhängig von spezifischen Bearbeitungsstationen zu formulieren. Die Bearbeitungsreihenfolge eines Werkstücks kann somit ausgedrückt werden durch eine Liste aufeinanderfolgender Funktionalitäten, die ein bestimmtes Werkstück benötigt. Im Verlauf der Abarbeitung des Rezepts wählt das Fahrzeug selbst eine der im Cluster hinterlegten Stationen zur benötigten Funktionalität aus. Das Rezept muss der Wegfindungsschicht während des gesamten Bearbeitungsvorgangs zur Verfügung stehen, um die Auswahl des jeweils nächsten Routenziels zu ermöglichen. Daraus folgt, dass Rezepte nach der Zuweisung zu einem Werkstück bis zum Abarbeitungsende verfügbar sein müssen.
 			\\[4pt]
-			Zur Erfassung der Daten von Fahrzeugen, werden die folgenden Informationen gespeichert:
+			Zur Erfassung der Daten von Fahrzeugen werden die folgenden Informationen gespeichert:
 			
 			\begin{itemize}
 				\item ID des Fahrzeugs, zur Unterscheidung unterschiedlicher Fahrzeuge.
@@ -297,8 +295,6 @@
 				\caption{Informationen über das eigene und andere Fahrzeuge in der Anlage. Nur für das eigene Fahrzeug werden Routenziel und Rezeptinformationen abgespeichert.}\label{VehicleControlBlock}
 			\end{figure}
 			Die Zuweisung von Rezepten erfolgt für jedes Fahrzeug beim Eintritt in die Anlage. Der Anlagenknoten "`0"' stellt in der realisierten Modellanlage den Startknoten dar. Bei Erkennung des Startknotens wird ein Rezept aus der verfügbaren Rezeptliste ausgewählt und dem Fahrzeug zugewiesen. Nach einer kurzen Wartezeit startet die Wegfindungsschicht die Berechnung der Route zur ersten Funktionalität des zugewiesenen Rezepts. Beim Verlassen der Anlage deaktiviert sich die Wegfindung und es wird eine statische Route über die Rückführstrecke zum Anlageneingang zurück gesendet. Beim Erreichen des Eingangsknotens wird erneut ein Rezept zugewiesen. Dies ermöglicht eine endlose Wiederholung des Bearbeitungsvorgangs  mit unterschiedlichen Rezepten bis zum Abbruch durch den Benutzer.
-			\\[4pt]
-			\textbf{Ggf für Fazit oder hier}: Eine geplante Erweiterung der Anlage sieht vor, dass die Zuweisung von Rezepten durch ein zentrales Steuersystem außerhalb der Anlage abgewickelt wird. Diese Funktion wurde jedoch noch nicht implementiert, weshalb die Zuweisung innerhalb der Wegfindungsschicht stattfindet.
 			
 		
 		\subsection{Zuweisung einer Bearbeitungsstation}
