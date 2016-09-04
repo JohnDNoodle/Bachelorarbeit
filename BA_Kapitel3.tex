@@ -52,7 +52,7 @@
 			
 		\end{longtable}
 		
-		Der Dijkstra-Algorithmus ist aufgrund seiner langen Berechnungszeit ungeeignet, für die Wegfindung im laufenden Betrieb der \ac{FTF} jedoch kann ausgenutzt werden, dass bei der Berechnung des kürzesten Pfades via Dijkstra die Abstände aller besuchten Knoten zum Startknoten ermittelt werden. Diese Abstände bilden die Basis zur Verbesserung der bei einem der anderen Algorithmen genutzten Heuristiken. Die Algorithmen \ac{MA*}, \ac{RTA*} und \ac{D*} sind alle Weiterentwicklungen des A*-Algorithmus. Die zu entwickelnde Modellanlage besitzt im vorliegenden Fall nur eine begrenzte Anzahl von Knoten. Dadurch ist der Nachteil des hohen Speicherbedarfs des Grundalgorithmus A* hier vernachlässigbar und der zusätzliche Aufwand für die Implementierung speichereffizienteren \ac{MA*}-Algorithmus kann zunächst vermieden  werden. Bei realen Anlagen mit einer höheren Anzahl an Knoten muss jedoch im Einzelfall betrachtet werden, ob eine Steuerung mit größerem Arbeitsspeicher oder die Implementierung des \ac{MA*}-Algorithmus notwendig ist. Der \ac{D*}-Algorithmus wurde wegen seiner höheren Komplexität und der Beschränkungen durch die Programmierumgebung nicht implementiert. Als zyklischer Wegfindungsalgorithmus wurde eine Mischform des A*-Algorithmus mit Planungs- und Ausführungsaspekten ähnlich denen von \ac{RTA*} verwendet, indem in regelmäßigen Abständen der bisher gefundene Teilweg verifiziert und bei Bedarf neu berechnet wird. Die verwendeten Algorithmen sollen nun etwas näher betrachtet werden.
+		Der Dijkstra-Algorithmus ist aufgrund seiner langen Berechnungszeit ungeeignet, für die Wegfindung im laufenden Betrieb der \ac{FTF} jedoch kann ausgenutzt werden, dass bei der Berechnung des kürzesten Pfades via Dijkstra die Abstände aller besuchten Knoten zum Startknoten ermittelt werden. Diese Abstände bilden die Basis zur Verbesserung der bei einem der anderen Algorithmen genutzten Heuristiken. Die Algorithmen \ac{MA*}, \ac{RTA*} und \ac{D*} sind alle Weiterentwicklungen des A*-Algorithmus. Die zu entwickelnde Modellanlage besitzt im vorliegenden Fall jedoch nur eine begrenzte Anzahl von Knoten. Dadurch ist der Nachteil des hohen Speicherbedarfs des Grundalgorithmus A* hier vernachlässigbar und der zusätzliche Aufwand für die Implementierung des speichereffizienteren \ac{MA*}-Algorithmus kann zunächst vermieden  werden. Bei realen Anlagen mit einer höheren Anzahl an Knoten muss jedoch im Einzelfall betrachtet werden, ob eine Steuerung mit größerem Arbeitsspeicher oder die Implementierung des \ac{MA*}-Algorithmus notwendig ist. Der \ac{D*}-Algorithmus wurde wegen seiner höheren Komplexität und der Beschränkungen durch die Programmierumgebung nicht implementiert. Als zyklischer Wegfindungsalgorithmus wurde eine Mischform des A*-Algorithmus mit Planungs- und Ausführungsaspekten ähnlich denen von \ac{RTA*} verwendet, indem in regelmäßigen Abständen der bisher gefundene Teilweg verifiziert und bei Bedarf neu berechnet wird. Die verwendeten Algorithmen sollen nun etwas näher betrachtet werden.
 
 \section{Gemeinsamkeiten der Algorithmen}
 
@@ -64,15 +64,15 @@
 		
 		\begin{longtable}{p{2.5cm} p{10cm}}	
 			\textbf{Klasse A:} & Die Menge aller Knoten, zu denen bereits ein kürzester Pfad  vom Startknoten aus bekannt ist. Diese Klasse wird auch als Closed-List bezeichnet.\\[0.25cm]
-			\textbf{Klasse B:} & Die Menge aller Knoten, die mit mindestens einem Knoten aus Gruppe A verbunden sind, jedoch selbst nicht zu A gehören. Diese Klasse wird auch als Open-List bezeichnet.\\[0.25cm]
-			\textbf{Klasse C:} & Die Menge der restlichen Knoten, die nicht in den Gruppen A oder B enthalten sind, und somit noch nicht betrachtet wurden.\\[0.25cm]
+			\textbf{Klasse B:} & Die Menge aller Knoten, die mit mindestens einem Knoten aus Klasse A verbunden sind, jedoch selbst nicht zu A gehören. Diese Klasse wird auch als Open-List bezeichnet.\\[0.25cm]
+			\textbf{Klasse C:} & Die Menge der restlichen Knoten, die nicht in den Klassen A oder B enthalten sind, und somit noch nicht betrachtet wurden.\\[0.25cm]
 		\end{longtable}
 		
 		Analog können auch die Kanten des Graphen klassifiziert werden.
 	
 		\begin{longtable}{p{2.5cm} p{10cm}}
-			\textbf{Klasse I:} & Die Menge aller Kanten, die in einem kürzesten Pfad zu einem der Knoten aus Gruppe A vorkommen.\\[0.25cm]
-			\textbf{Klasse II:} & Die Menge aller Kanten, aus denen die nächste Kante für Gruppe I ausgewählt wird, wenn der korrespondierende Knoten aus B zur Gruppe A hinzugefügt wird. Es existiert immer genau eine derartige Kante für jeden Knoten aus Gruppe B. \\[0.25cm]
+			\textbf{Klasse I:} & Die Menge aller Kanten, die in einem kürzesten Pfad zu einem der Knoten aus Klasse A vorkommen.\\[0.25cm]
+			\textbf{Klasse II:} & Die Menge aller Kanten, aus denen die nächste Kante für Klasse I ausgewählt wird, wenn der korrespondierende Knoten aus B zur Klasse A hinzugefügt wird. Es existiert immer genau eine derartige Kante für jeden Knoten aus Klasse B. \\[0.25cm]
 			\textbf{Klasse III:} & Die restlichen Kanten, die sich nicht in den Klassen I und II befinden.\\[0.25cm]
 		\end{longtable}
 		
@@ -89,7 +89,7 @@
 		\end{itemize}
 		
 		Es sei zunächst nicht bekannt, ob der Knoten $n$ auch auf dem kürzesten Pfad von $s$ nach $z$ liegt.
-		Diese Entscheidungsfunktion, kann unterteilt werden in zwei Unterfunktionen $g(n)$ und $h(n)$ für die gilt \cite{Hart1968}:
+		Die Entscheidungsfunktion kann unterteilt werden in zwei Unterfunktionen $g(n)$ und $h(n)$ für die gilt \cite{Hart1968}:
 		\begin{equation}
 		f(n)=g(n)+h(n)
 		\end{equation}
@@ -206,7 +206,7 @@
 	
 	\subsection{Grundprinzip}
 		\label{A*-Alg}
-		Die Funktionsweise des A*-Algorithmus kann als Erweiterung des Dijkstra-Algorithmus beschrieben werden \cite{Hart1968}. Unter Verwendung der in Abschnitt \ref{Abschaetz} definierten Entscheidungsfunktion kann wie folgt verfahren werden:
+		Die Funktionsweise des A*-Algorithmus kann als Erweiterung des Dijkstra-Algorithmus beschrieben werden. Unter Verwendung der in Abschnitt \ref{Abschaetz} definierten Entscheidungsfunktion kann wie folgt verfahren werden \cite{Hart1968}:
 		
 		\begin{itemize}
 			 \item 	$s$, $z$ und $n$ sind Knoten eines Graphen. Es soll der kürzeste Pfad von $s$ nach $z$ ermittelt werden. 
